@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ShipController : MonoBehaviour
+public class Ship : MonoBehaviour
 {
     [Header("Movement Settings")]
     [SerializeField] private float maxSpeed = 5f;
@@ -13,15 +13,26 @@ public class ShipController : MonoBehaviour
     private float currentGas; // Current gas level
 
     [Header("Damage Settings")]
-    [SerializeField] private float damageAmount; // Submarine health
+    [SerializeField] private float damageAmount = 100f; // Submarine health
 
     private Vector2 velocity; // Current velocity of the ship
     private Vector2 input; // Player input vector
 
+    private Vector3 defaultStartPosition; 
+    private Vector3 respawnPosition; 
+
     void Start()
     {
+        defaultStartPosition = transform.position;
+
+        // Try to load the last saved gas station position; default to starting position if not found
+        Vector3 savedPosition = SaveManager.LoadGasStationPosition();
+        respawnPosition = savedPosition != Vector3.zero ? savedPosition : defaultStartPosition;
+
+        damageAmount = SaveManager.LoadPlayerDamage();
+
+        transform.position = respawnPosition;
         currentGas = gasMaximum;
-        damageAmount = 100f; // Submarine health (starts at 100%)
     }
 
     void Update()
@@ -30,27 +41,30 @@ public class ShipController : MonoBehaviour
 
         // Decrease gas over time
         currentGas -= gasDecreaseRate * Time.deltaTime;
+        currentGas = Mathf.Clamp(currentGas, 0, gasMaximum);
 
         // Check if gas is depleted
-        if (currentGas <= 0)
+        if (currentGas <= 0) // || damageAmount <=0
         {
             Debug.Log("Gas depleted! Player is dead.");
             Die();
         }
+
+        // Update UI
+        ShipUIManager.Instance.UpdateUI(damageAmount, currentGas);
     }
 
     private void HandleMovement()
     {
-        // Get player input
         input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
 
-        // Normalize input to prevent diagonal speed boost
+        // Normalize input
         if (input.sqrMagnitude > 1f)
         {
             input = input.normalized;
         }
 
-        // Apply acceleration based on input
+        // Apply acceleration
         if (input != Vector2.zero)
         {
             velocity += input * acceleration * Time.deltaTime;
@@ -68,18 +82,12 @@ public class ShipController : MonoBehaviour
 
     private void Die()
     {
-        
-    }
+        respawnPosition = SaveManager.LoadGasStationPosition();
+        if (respawnPosition == Vector3.zero) respawnPosition = defaultStartPosition;
 
-    private void OnValidate()
-    {
-        // Ensure settings are valid
-        if (acceleration < 0) acceleration = 0;
-        if (deceleration < 0) deceleration = 0;
-        if (maxSpeed < 0) maxSpeed = 0;
-        if (gasMaximum < 0) gasMaximum = 0;
-        if (gasDecreaseRate < 0) gasDecreaseRate = 0;
-        if (damageAmount < 0) damageAmount = 0;
+        transform.position = respawnPosition; // Respawn at the saved gas station position or default start position
+        currentGas = gasMaximum; // Refill the gas to maximum
+        damageAmount = SaveManager.LoadPlayerDamage(); // Reload the damage amount
     }
 
     public void TakeDamage(float amount)
