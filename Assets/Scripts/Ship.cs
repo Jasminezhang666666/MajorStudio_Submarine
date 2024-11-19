@@ -56,7 +56,24 @@ public class Ship : MonoBehaviour
 
     private void HandleMovement()
     {
-        input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        input = Vector2.zero; 
+
+        if (Input.GetKey(KeyCode.W))
+        {
+            input.y = 1f; 
+        }
+        if (Input.GetKey(KeyCode.S))
+        {
+            input.y = -1f; 
+        }
+        if (Input.GetKey(KeyCode.A))
+        {
+            input.x = -1f; 
+        }
+        if (Input.GetKey(KeyCode.D))
+        {
+            input.x = 1f; 
+        }
 
         // Normalize input
         if (input.sqrMagnitude > 1f)
@@ -64,7 +81,7 @@ public class Ship : MonoBehaviour
             input = input.normalized;
         }
 
-        // Apply acceleration
+        // acceleration
         if (input != Vector2.zero)
         {
             velocity += input * acceleration * Time.deltaTime;
@@ -72,11 +89,10 @@ public class Ship : MonoBehaviour
         }
         else
         {
-            // Apply deceleration when no input
+            // deceleration 
             velocity = Vector2.MoveTowards(velocity, Vector2.zero, deceleration * Time.deltaTime);
         }
 
-        // Apply movement
         transform.Translate(velocity * Time.deltaTime);
     }
 
