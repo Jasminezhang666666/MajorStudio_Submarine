@@ -13,13 +13,14 @@ public class Ship : MonoBehaviour
     private float currentGas; // Current gas level
 
     [Header("Damage Settings")]
-    [SerializeField] private float damageAmount = 100f; // Submarine health
+    [SerializeField] private float maxHealth = 100f; // Maximum health
+    private float currentHealth; // Current health
 
     private Vector2 velocity; // Current velocity of the ship
     private Vector2 input; // Player input vector
 
-    private Vector3 defaultStartPosition; 
-    private Vector3 respawnPosition; 
+    private Vector3 defaultStartPosition;
+    private Vector3 respawnPosition;
 
     void Start()
     {
@@ -29,10 +30,9 @@ public class Ship : MonoBehaviour
         Vector3 savedPosition = SaveManager.LoadGasStationPosition();
         respawnPosition = savedPosition != Vector3.zero ? savedPosition : defaultStartPosition;
 
-        damageAmount = SaveManager.LoadPlayerDamage();
-
+        currentHealth = maxHealth; // Initialize health
+        currentGas = gasMaximum; // Initialize gas
         transform.position = respawnPosition;
-        currentGas = gasMaximum;
     }
 
     void Update()
@@ -44,35 +44,35 @@ public class Ship : MonoBehaviour
         currentGas = Mathf.Clamp(currentGas, 0, gasMaximum);
 
         // Check if gas is depleted
-        if (currentGas <= 0) // || damageAmount <=0
+        if (currentGas <= 0 || currentHealth <= 0) // Gas or Health depletion condition
         {
-            Debug.Log("Gas depleted! Player is dead.");
+            Debug.Log("Player is dead due to depletion of Gas or Health.");
             Die();
         }
 
         // Update UI
-        ShipUIManager.Instance.UpdateUI(damageAmount, currentGas);
+        ShipUIManager.Instance.UpdateUI(currentHealth, currentGas);
     }
 
     private void HandleMovement()
     {
-        input = Vector2.zero; 
+        input = Vector2.zero;
 
         if (Input.GetKey(KeyCode.W))
         {
-            input.y = 1f; 
+            input.y = 1f;
         }
         if (Input.GetKey(KeyCode.S))
         {
-            input.y = -1f; 
+            input.y = -1f;
         }
         if (Input.GetKey(KeyCode.A))
         {
-            input.x = -1f; 
+            input.x = -1f;
         }
         if (Input.GetKey(KeyCode.D))
         {
-            input.x = 1f; 
+            input.x = 1f;
         }
 
         // Normalize input
@@ -103,13 +103,13 @@ public class Ship : MonoBehaviour
 
         transform.position = respawnPosition; // Respawn at the saved gas station position or default start position
         currentGas = gasMaximum; // Refill the gas to maximum
-        damageAmount = SaveManager.LoadPlayerDamage(); // Reload the damage amount
+        currentHealth = maxHealth; // Refill health
     }
 
     public void TakeDamage(float amount)
     {
-        damageAmount -= amount;
-        if (damageAmount <= 0)
+        currentHealth -= amount;
+        if (currentHealth <= 0)
         {
             Debug.Log("Submarine Destroyed!");
             Die();
@@ -121,6 +121,11 @@ public class Ship : MonoBehaviour
         currentGas = gasMaximum;
     }
 
+    public float GetDamageAmount()
+    {
+        return currentHealth;  // Return the current damage amount
+    }
+
     public float GetCurrentGas() => currentGas;
-    public float GetDamageAmount() => damageAmount;
+    public float GetCurrentHealth() => currentHealth;
 }
