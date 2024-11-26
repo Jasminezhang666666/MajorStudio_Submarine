@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class HPCover : MonoBehaviour
+public class HpRecover : MonoBehaviour
 {
     [SerializeField] private float hpRestoreAmount = 10f; // HP recover amount
 

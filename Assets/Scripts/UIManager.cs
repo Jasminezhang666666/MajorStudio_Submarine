@@ -8,6 +8,7 @@ public class ShipUIManager : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI damageText;
     [SerializeField] private TextMeshProUGUI gasText;
+    [SerializeField] private TextMeshProUGUI currentSpeedText;
 
     private void Awake()
     {
@@ -37,9 +38,10 @@ public class ShipUIManager : MonoBehaviour
         Debug.Log("Scene reloaded!");
     }
 
-    public void UpdateUI(float damage, float gas)
+    public void UpdateUI(float damage, float gas, float currentSpeed)
     {
         damageText.text = $"Damage: {damage:F1}%";
         gasText.text = $"Gas: {gas:F1}";
+        currentSpeedText.text = $"Speed: {currentSpeed:F1}";
     }
 }
