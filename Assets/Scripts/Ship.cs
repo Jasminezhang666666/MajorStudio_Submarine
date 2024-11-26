@@ -8,12 +8,12 @@ public class Ship : MonoBehaviour
     [SerializeField] private float deceleration = 1f;
 
     [Header("Gas Settings")]
-    [SerializeField] private float gasMaximum = 40f;
+    [SerializeField] private float gasMaximum = 60f;
     [SerializeField] private float gasDecreaseRate = 0.2f; // Rate at which gas decreases per second
     private float currentGas; // Current gas level
 
     [Header("Damage Settings")]
-    [SerializeField] private float damageAmount = 100f; // Submarine health
+    [SerializeField] private float damageAmount = 90f; // Submarine health
 
     private Vector2 velocity; // Current velocity of the ship
     private Vector2 input; // Player input vector
@@ -32,7 +32,7 @@ public class Ship : MonoBehaviour
         Vector3 savedPosition = SaveManager.LoadGasStationPosition();
         respawnPosition = savedPosition != Vector3.zero ? savedPosition : defaultStartPosition;
 
-        damageAmount = SaveManager.LoadPlayerDamage();
+        //damageAmount = SaveManager.LoadPlayerDamage();
 
         transform.position = respawnPosition;
         currentGas = gasMaximum;
@@ -122,7 +122,7 @@ public class Ship : MonoBehaviour
 
         transform.position = respawnPosition; // Respawn at the saved gas station position or default start position
         currentGas = gasMaximum; // Refill the gas to maximum
-        damageAmount = SaveManager.LoadPlayerDamage(); // Reload the damage amount
+        //damageAmount = SaveManager.LoadPlayerDamage(); // Reload the damage amount
     }
 
     public void TakeDamage(float amount)
@@ -138,6 +138,13 @@ public class Ship : MonoBehaviour
     public void RefuelGas()
     {
         currentGas = gasMaximum;
+    }
+
+    
+    public void RestoreHP(float newDamageAmount)//HP recover
+    {
+        damageAmount = newDamageAmount;
+        Debug.Log($"HP Restored to: {damageAmount}");
     }
 
     public float GetCurrentGas() => currentGas;
