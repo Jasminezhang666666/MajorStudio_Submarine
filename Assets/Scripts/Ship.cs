@@ -18,8 +18,11 @@ public class Ship : MonoBehaviour
     private Vector2 velocity; // Current velocity of the ship
     private Vector2 input; // Player input vector
 
-    private Vector3 defaultStartPosition; 
-    private Vector3 respawnPosition; 
+    private Vector3 defaultStartPosition;
+    private Vector3 respawnPosition;
+
+    [Header("Animation Settings")]
+    [SerializeField] private Animator Submarineanimator; // Animator for the ship
 
     void Start()
     {
@@ -33,6 +36,12 @@ public class Ship : MonoBehaviour
 
         transform.position = respawnPosition;
         currentGas = gasMaximum;
+
+        // Ensure animator is assigned
+        if (Submarineanimator == null)
+        {
+            Submarineanimator = GetComponent<Animator>();
+        }
     }
 
     void Update()
@@ -56,29 +65,39 @@ public class Ship : MonoBehaviour
 
     private void HandleMovement()
     {
-        input = Vector2.zero; 
+        input = Vector2.zero;
 
         if (Input.GetKey(KeyCode.W))
         {
-            input.y = 1f; 
+            input.y = 1f;
         }
         if (Input.GetKey(KeyCode.S))
         {
-            input.y = -1f; 
+            input.y = -1f;
         }
         if (Input.GetKey(KeyCode.A))
         {
-            input.x = -1f; 
+            input.x = -1f;
         }
         if (Input.GetKey(KeyCode.D))
         {
-            input.x = 1f; 
+            input.x = 1f;
         }
 
         // Normalize input
         if (input.sqrMagnitude > 1f)
         {
             input = input.normalized;
+        }
+
+        // Handle animations
+        if (input != Vector2.zero)
+        {
+            Submarineanimator.SetBool("IsIdle", false); 
+        }
+        else
+        {
+            Submarineanimator.SetBool("IsIdle", true); 
         }
 
         // acceleration
