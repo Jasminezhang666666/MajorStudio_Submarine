@@ -19,13 +19,13 @@ public class SaveManager : MonoBehaviour
 
     public static float LoadPlayerDamage()
     {
-        return currentPlayerDamage != 0f ? currentPlayerDamage : 30f; // Default to 100 if no data
+        return currentPlayerDamage != 0f ? currentPlayerDamage : 40f; // Default to 100 if no data
     }
 
     public static void ClearData()
     {
         currentGasStationPosition = Vector3.zero;
-        currentPlayerDamage = 30f;
+        currentPlayerDamage = 40f;
         Debug.Log("Game state cleared!");
     }
 }

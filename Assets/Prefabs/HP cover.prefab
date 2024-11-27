@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8227723697043537885}
   - component: {fileID: 5213680789143398428}
-  - component: {fileID: 4702875079221443454}
+  - component: {fileID: 6966990765025665562}
   m_Layer: 0
   m_Name: HP cover
   m_TagString: Untagged
@@ -30,7 +30,8 @@ Transform:
   m_LocalPosition: {x: 0.91502625, y: 0.37850276, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 2009777504101888654}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &5213680789143398428
@@ -74,8 +75,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.627451, g: 1, b: 0.57254905, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 6568e8cb8da7df542b0a79b3be777af0, type: 3}
+  m_Color: {r: 0.6792453, g: 0.6792453, b: 0.6792453, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -85,8 +86,8 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!61 &4702875079221443454
-BoxCollider2D:
+--- !u!60 &6966990765025665562
+PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -114,19 +115,159 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
+    oldSize: {x: 2.5, y: 2.5}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
+  m_Points:
+    m_Paths:
+    - - {x: 0.35999998, y: -0.28}
+      - {x: 0.47, y: -0.24}
+      - {x: 0.61, y: -0.175}
+      - {x: 0.66999996, y: -0.145}
+      - {x: 0.71999997, y: -0.11}
+      - {x: 0.805, y: -0.03}
+      - {x: 0.835, y: 0.01}
+      - {x: 0.84, y: 0.024999999}
+      - {x: 0.84, y: 0.04}
+      - {x: 0.82, y: 0.12}
+      - {x: 0.765, y: 0.36499998}
+      - {x: 0.745, y: 0.435}
+      - {x: 0.72999996, y: 0.465}
+      - {x: 0.66999996, y: 0.53}
+      - {x: 0.635, y: 0.545}
+      - {x: 0.53, y: 0.575}
+      - {x: 0.45999998, y: 0.585}
+      - {x: 0.385, y: 0.675}
+      - {x: 0.33499998, y: 0.71}
+      - {x: 0.29, y: 0.71999997}
+      - {x: 0.25, y: 0.71999997}
+      - {x: 0.235, y: 0.71}
+      - {x: 0.205, y: 0.675}
+      - {x: 0.155, y: 0.635}
+      - {x: 0.105, y: 0.675}
+      - {x: 0.055, y: 0.66999996}
+      - {x: 0.024999999, y: 0.64}
+      - {x: 0, y: 0.60499996}
+      - {x: -0.02, y: 0.585}
+      - {x: -0.065, y: 0.60499996}
+      - {x: -0.099999994, y: 0.60499996}
+      - {x: -0.16, y: 0.58}
+      - {x: -0.19, y: 0.545}
+      - {x: -0.195, y: 0.48}
+      - {x: -0.38, y: 0.48}
+      - {x: -0.48999998, y: 0.45499998}
+      - {x: -0.61, y: 0.415}
+      - {x: -0.695, y: 0.34}
+      - {x: -0.72499996, y: 0.24499999}
+      - {x: -0.72499996, y: 0.17999999}
+      - {x: -0.75, y: 0.01}
+      - {x: -0.75, y: -0.04}
+      - {x: -0.74, y: -0.07}
+      - {x: -0.705, y: -0.095}
+      - {x: -0.565, y: -0.16499999}
+      - {x: -0.5, y: -0.19999999}
+      - {x: -0.39, y: -0.19999999}
+      - {x: -0.325, y: -0.25}
+      - {x: -0.185, y: -0.285}
+      - {x: -0.11, y: -0.305}
+      - {x: -0.085, y: -0.31}
+      - {x: -0.035, y: -0.32999998}
+      - {x: -0.005, y: -0.32999998}
+      - {x: 0.024999999, y: -0.325}
+      - {x: 0.074999996, y: -0.315}
+      - {x: 0.275, y: -0.29}
+  m_UseDelaunayMesh: 0
+--- !u!1 &4584975220903775450
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2009777504101888654}
+  - component: {fileID: 6256441431709452425}
+  m_Layer: 0
+  m_Name: Light 2D
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2009777504101888654
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4584975220903775450}
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
+  m_LocalRotation: {x: 0, y: -0, z: -0.2449735, w: 0.96952975}
+  m_LocalPosition: {x: 0, y: 0.06, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8227723697043537885}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6256441431709452425
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4584975220903775450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 073797afb82c5a1438f328866b10b3f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ComponentVersion: 1
+  m_LightType: 1
+  m_BlendStyleIndex: 0
+  m_FalloffIntensity: 0.5
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Intensity: 1
+  m_LightVolumeIntensity: 1
+  m_LightVolumeIntensityEnabled: 0
+  m_ApplyToSortingLayers: 00000000
+  m_LightCookieSprite: {fileID: 0}
+  m_DeprecatedPointLightCookieSprite: {fileID: 0}
+  m_LightOrder: 0
+  m_AlphaBlendOnOverlap: 0
+  m_OverlapOperation: 0
+  m_NormalMapDistance: 3
+  m_NormalMapQuality: 2
+  m_UseNormalMap: 0
+  m_ShadowIntensityEnabled: 0
+  m_ShadowIntensity: 0.75
+  m_ShadowVolumeIntensityEnabled: 0
+  m_ShadowVolumeIntensity: 0.75
+  m_LocalBounds:
+    m_Center: {x: -0.040100038, y: 0.11464998, z: 0}
+    m_Extent: {x: 1.2942, y: 1.09345, z: 0}
+  m_PointLightInnerAngle: 360
+  m_PointLightOuterAngle: 360
+  m_PointLightInnerRadius: 0
+  m_PointLightOuterRadius: 1
+  m_ShapeLightParametricSides: 5
+  m_ShapeLightParametricAngleOffset: 0
+  m_ShapeLightParametricRadius: 1
+  m_ShapeLightFalloffSize: 0.5
+  m_ShapeLightFalloffOffset: {x: 0, y: 0}
+  m_ShapePath:
+  - {x: 0.75588274, y: 0.341177, z: 0}
+  - {x: 0.43480396, y: 0.710219, z: 0}
+  - {x: -0.16470575, y: 0.66046405, z: 0}
+  - {x: -0.82696104, y: -0.042647123, z: 0}
+  - {x: -0.5982847, y: -0.48987556, z: 0}
+  - {x: 0.3210783, y: -0.3477186, z: 0}
