@@ -40,7 +40,7 @@ public class ShipUIManager : MonoBehaviour
 
     public void UpdateUI(float damage, float gas, float currentSpeed)
     {
-        damageText.text = $"Damage: {damage:F1}%";
+        damageText.text = $"Health: {damage:F1}%";
         gasText.text = $"Gas: {gas:F1}";
         currentSpeedText.text = $"Speed: {currentSpeed:F1}";
     }
