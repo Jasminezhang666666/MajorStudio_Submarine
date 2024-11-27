@@ -6,6 +6,12 @@ public class SpotLightController : MonoBehaviour
     public Light2D spotLight;
     private float rotationStep = 45f; 
     private float currentAngle = 0f;
+    private PolygonCollider2D polygonCollider;
+
+    private void Start()
+    {
+        polygonCollider = GetComponent<PolygonCollider2D>();
+    }
 
     void Update()
     {
@@ -13,6 +19,7 @@ public class SpotLightController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.RightShift) || Input.GetKeyDown(KeyCode.LeftShift))
         {
             spotLight.enabled = !spotLight.enabled;
+            polygonCollider.enabled = !polygonCollider.enabled;
         }
 
         // direction
