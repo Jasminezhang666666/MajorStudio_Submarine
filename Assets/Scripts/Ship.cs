@@ -1,5 +1,6 @@
+using System.Linq;
 using UnityEngine;
-using UnityEngine.Rendering.Universal; // 引入Light2D的命名空间
+using UnityEngine.Rendering.Universal;
 
 public class Ship : MonoBehaviour
 {
@@ -27,14 +28,16 @@ public class Ship : MonoBehaviour
     [SerializeField] private Animator Submarineanimator;
 
     [Header("Light Settings")]
-    [SerializeField] private Light2D directionalLight; // 2D方向光
-    [SerializeField] private Light2D autoLight; // 2D自动光
-    [SerializeField] private float lowIntensity = 0.2f; // 当血量低于40%时光源的亮度
+    [SerializeField] private Light2D directionalLight;
+    [SerializeField] private Light2D autoLight;
+    [SerializeField] private float lowIntensity = 0.2f;
     [SerializeField] private float normalIntensity = 1f;
-    [SerializeField] private float directionalnormalIntensity = 12f;// 正常状态下的光源亮度
-    [SerializeField] private Color dangerColor = Color.red; // 血量低时的光源颜色
-    [SerializeField] private Color normalColor = Color.white; // 正常状态下的光源颜色
-    private bool isFlashing = false; // 防止重复启动闪烁协程
+    [SerializeField] private float directionalnormalIntensity = 12f;
+    [SerializeField] private Color dangerColor = Color.red;
+    [SerializeField] private Color normalColor = Color.white;
+    private bool isFlashing = false;
+
+    private Bounds combinedBounds;
 
     void Start()
     {
@@ -52,6 +55,8 @@ public class Ship : MonoBehaviour
         {
             Submarineanimator = GetComponent<Animator>();
         }
+
+        UpdateCombinedBounds();
     }
 
     void Update()
@@ -109,7 +114,45 @@ public class Ship : MonoBehaviour
             velocity = Vector2.MoveTowards(velocity, Vector2.zero, deceleration * Time.deltaTime);
         }
 
-        transform.Translate(velocity * Time.deltaTime);
+        Vector3 newPosition = transform.position + (Vector3)(velocity * Time.deltaTime);
+
+        // Clamp the position within the combined bounds
+        newPosition = ClampPositionWithinBounds(newPosition);
+
+        transform.position = newPosition;
+    }
+
+    private Vector3 ClampPositionWithinBounds(Vector3 targetPosition)
+    {
+        if (combinedBounds.size != Vector3.zero)
+        {
+            targetPosition.x = Mathf.Clamp(targetPosition.x, combinedBounds.min.x, combinedBounds.max.x);
+            targetPosition.y = Mathf.Clamp(targetPosition.y, combinedBounds.min.y, combinedBounds.max.y);
+        }
+        return targetPosition;
+    }
+
+    private void UpdateCombinedBounds()
+    {
+        Collider2D[] cameraWalls = GameObject.FindGameObjectsWithTag("Camera_wall")
+            .Select(go => go.GetComponent<Collider2D>())
+            .Where(c => c != null)
+            .ToArray();
+
+        if (cameraWalls.Length > 0)
+        {
+            combinedBounds = cameraWalls[0].bounds;
+
+            foreach (var collider in cameraWalls)
+            {
+                combinedBounds.Encapsulate(collider.bounds);
+            }
+        }
+        else
+        {
+            Debug.LogWarning("No colliders found with the tag 'Camera_wall'. The ship will move freely.");
+            combinedBounds = new Bounds(Vector3.zero, Vector3.positiveInfinity); // No restriction
+        }
     }
 
     private void HandleLights()
@@ -136,7 +179,6 @@ public class Ship : MonoBehaviour
         }
         else
         {
-            // 恢复光源到正常状态
             if (directionalLight != null)
             {
                 directionalLight.intensity = directionalnormalIntensity;
@@ -150,9 +192,9 @@ public class Ship : MonoBehaviour
 
                 if (isFlashing)
                 {
-                    StopAllCoroutines(); // 停止所有协程，停止闪烁
-                    autoLight.enabled = true; // 确保光源恢复开启状态
-                    isFlashing = false; // 重置闪烁状态
+                    StopAllCoroutines();
+                    autoLight.enabled = true;
+                    isFlashing = false;
                 }
             }
         }
@@ -164,14 +206,14 @@ public class Ship : MonoBehaviour
         {
             if (autoLight != null)
             {
-                autoLight.enabled = !autoLight.enabled; // 切换开关状态
+                autoLight.enabled = !autoLight.enabled;
             }
-            yield return new WaitForSeconds(0.5f); // 每隔0.5秒切换
+            yield return new WaitForSeconds(0.5f);
         }
 
         if (autoLight != null)
         {
-            autoLight.enabled = true; // 恢复为开启状态
+            autoLight.enabled = true;
         }
     }
 
@@ -215,5 +257,4 @@ public class Ship : MonoBehaviour
 
     public float GetCurrentGas() => currentGas;
     public float GetDamageAmount() => damageAmount;
-    public float GetCurrentSpeed() => currentSpeed;
 }

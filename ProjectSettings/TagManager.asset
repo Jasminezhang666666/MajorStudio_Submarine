@@ -7,6 +7,7 @@ TagManager:
   - Item
   - Enemy_Walls
   - Light
+  - Camera_wall
   layers:
   - Default
   - TransparentFX
