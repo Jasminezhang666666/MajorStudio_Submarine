@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Linq;
 
 public class CameraMovement : MonoBehaviour
 {
@@ -7,15 +6,20 @@ public class CameraMovement : MonoBehaviour
     public Transform player;
 
     [Header("Buffer Area")]
-    public float bufferWidth = 2f; 
-    public float bufferHeight = 1f; 
+    public float bufferWidth = 2f;
+    public float bufferHeight = 1f;
 
     [Header("Smooth Damping")]
     public float smoothTime = 0.2f; // Smooth transition time
+    public float movementThreshold = 0.1f; // Minimum movement threshold
+
+    [Header("Camera Bounds")]
+    public float minX = -10f; // Minimum X boundary
+    public float maxX = 10f;  // Maximum X boundary
+    public float minY = -5f;  // Minimum Y boundary
+    public float maxY = 5f;   // Maximum Y boundary
 
     private Vector3 velocity = Vector3.zero;
-    private Bounds combinedBounds;
-
     private Camera cam;
 
     private void Start()
@@ -27,9 +31,6 @@ public class CameraMovement : MonoBehaviour
             enabled = false;
             return;
         }
-
-        // Find and combine all camera wall colliders
-        UpdateCombinedBounds();
     }
 
     private void LateUpdate()
@@ -43,25 +44,22 @@ public class CameraMovement : MonoBehaviour
         Vector2 camMax = new Vector2(cameraPos.x + bufferWidth, cameraPos.y + bufferHeight);
 
         // Determine if the player is outside the buffer area
-        bool outHorizontal = player.position.x < camMin.x || player.position.x > camMax.x;
-        bool outVertical = player.position.y < camMin.y || player.position.y > camMax.y;
-
-        // Adjust camera position if player is outside the buffer
         Vector3 targetPosition = cameraPos;
 
-        if (outHorizontal)
-            targetPosition.x = Mathf.Lerp(cameraPos.x, player.position.x, 0.5f);
+        if (player.position.x < camMin.x || player.position.x > camMax.x)
+            targetPosition.x = player.position.x;
 
-        if (outVertical)
-            targetPosition.y = Mathf.Lerp(cameraPos.y, player.position.y, 0.5f);
+        if (player.position.y < camMin.y || player.position.y > camMax.y)
+            targetPosition.y = player.position.y;
 
-        // Smoothly move the camera
-        targetPosition.z = cameraPos.z;
-
-        // Clamp position within combined bounds
+        // Clamp target position within defined bounds
         targetPosition = ClampCameraPosition(targetPosition);
 
-        transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, smoothTime);
+        // Avoid small, unnecessary camera position updates
+        if (Vector3.Distance(transform.position, targetPosition) > movementThreshold)
+        {
+            transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, smoothTime);
+        }
     }
 
     private Vector3 ClampCameraPosition(Vector3 targetPosition)
@@ -69,46 +67,20 @@ public class CameraMovement : MonoBehaviour
         float camHalfHeight = cam.orthographicSize;
         float camHalfWidth = camHalfHeight * cam.aspect;
 
-        if (combinedBounds.size != Vector3.zero)
-        {
-            // Clamp position to keep camera within combined bounds
-            targetPosition.x = Mathf.Clamp(
-                targetPosition.x,
-                combinedBounds.min.x + camHalfWidth,
-                combinedBounds.max.x - camHalfWidth
-            );
+        // Clamp position within numerical bounds
+        targetPosition.x = Mathf.Clamp(
+            targetPosition.x,
+            minX + camHalfWidth,
+            maxX - camHalfWidth
+        );
 
-            targetPosition.y = Mathf.Clamp(
-                targetPosition.y,
-                combinedBounds.min.y + camHalfHeight,
-                combinedBounds.max.y - camHalfHeight
-            );
-        }
+        targetPosition.y = Mathf.Clamp(
+            targetPosition.y,
+            minY + camHalfHeight,
+            maxY - camHalfHeight
+        );
 
         return targetPosition;
-    }
-
-    private void UpdateCombinedBounds()
-    {
-        Collider2D[] cameraWalls = GameObject.FindGameObjectsWithTag("Camera_wall")
-            .Select(go => go.GetComponent<Collider2D>())
-            .Where(c => c != null)
-            .ToArray();
-
-        if (cameraWalls.Length > 0)
-        {
-            combinedBounds = cameraWalls[0].bounds;
-
-            foreach (var collider in cameraWalls)
-            {
-                combinedBounds.Encapsulate(collider.bounds);
-            }
-        }
-        else
-        {
-            Debug.LogWarning("No colliders found with the tag 'Camera_wall'. The camera will move freely.");
-            combinedBounds = new Bounds(Vector3.zero, Vector3.positiveInfinity); // No restriction
-        }
     }
 
     private void OnDrawGizmos()
@@ -121,11 +93,10 @@ public class CameraMovement : MonoBehaviour
             Gizmos.DrawWireCube(transform.position, bufferSize);
         }
 
-        // Visualize combined bounds
-        if (combinedBounds.size != Vector3.zero)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireCube(combinedBounds.center, combinedBounds.size);
-        }
+        // Visualize camera bounds
+        Gizmos.color = Color.red;
+        Vector3 boundsSize = new Vector3(maxX - minX, maxY - minY, 0);
+        Vector3 boundsCenter = new Vector3((minX + maxX) / 2, (minY + maxY) / 2, 0);
+        Gizmos.DrawWireCube(boundsCenter, boundsSize);
     }
 }
