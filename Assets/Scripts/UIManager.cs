@@ -1,13 +1,14 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using TMPro;
+using UnityEngine.UI; // Required for Slider and Image components
 
 public class ShipUIManager : MonoBehaviour
 {
     public static ShipUIManager Instance;
 
-    [SerializeField] private TextMeshProUGUI damageText;
-    [SerializeField] private TextMeshProUGUI gasText;
+    [SerializeField] private Slider healthBar; // Slider for the health bar
+    [SerializeField] private Slider gasBar; // Slider for the gas bar
     [SerializeField] private TextMeshProUGUI currentSpeedText;
 
     private void Awake()
@@ -24,7 +25,6 @@ public class ShipUIManager : MonoBehaviour
 
     private void Update()
     {
-        // Check if the R key is pressed to reload the scene
         if (Input.GetKeyDown(KeyCode.R))
         {
             ReloadCurrentScene();
@@ -38,10 +38,23 @@ public class ShipUIManager : MonoBehaviour
         Debug.Log("Scene reloaded!");
     }
 
-    public void UpdateUI(float damage, float gas, float currentSpeed)
+    public void UpdateUI(float health, float gas, float currentSpeed)
     {
-        damageText.text = $"Health: {damage:F1}%";
-        gasText.text = $"Gas: {gas:F1}";
-        currentSpeedText.text = $"Speed: {currentSpeed:F1}";
+        // Update the health and gas bars
+        if (healthBar != null)
+        {
+            healthBar.value = health / 100f; // Now health is out of 100
+        }
+
+        if (gasBar != null)
+        {
+            gasBar.value = gas / 100f; // Now gas is out of 100
+        }
+
+        // Update speed text
+        if (currentSpeedText != null)
+        {
+            currentSpeedText.text = $"Speed: {currentSpeed:F1}";
+        }
     }
 }
