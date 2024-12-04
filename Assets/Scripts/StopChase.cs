@@ -1,18 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class StopChase : MonoBehaviour
+public class StopChasing : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        // 检测是否与玩家发生碰撞
+        if (collision.CompareTag("Player"))
+        {
+            // 找到场景中所有的触手对象
+            ChaseTentacle[] tentacles = FindObjectsOfType<ChaseTentacle>();
+            foreach (var tentacle in tentacles)
+            {
+                // 将触手速度设置为0并删除
+                tentacle.StopAndDestroy();
+            }
+        }
     }
 }
