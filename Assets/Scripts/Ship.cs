@@ -210,10 +210,11 @@ public class Ship : MonoBehaviour
     public void TakeDamage(float amount)
     {
         damageAmount -= amount;
+        damageAmount = Mathf.Clamp(damageAmount, 0f, float.MaxValue);  // Ensure health doesn't go below 0
+
         if (damageAmount <= 0)
         {
-            Debug.Log("Submarine Destroyed!");
-            Die();
+            Die(); 
         }
     }
 
