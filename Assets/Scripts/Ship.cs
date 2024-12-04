@@ -238,4 +238,9 @@ public class Ship : MonoBehaviour
 
     public float GetCurrentGas() => currentGas;
     public float GetDamageAmount() => damageAmount;
+
+    public float GetCurrentSpeed()
+    {
+        return currentSpeed;
+    }
 }
