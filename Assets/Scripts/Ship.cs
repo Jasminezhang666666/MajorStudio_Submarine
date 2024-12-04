@@ -1,4 +1,5 @@
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
@@ -9,6 +10,7 @@ public class Ship : MonoBehaviour
     [SerializeField] private float acceleration = 2f;
     [SerializeField] private float deceleration = 1f;
     [SerializeField] private float currentSpeed;
+    public bool CanMove { get; set; } = true; // Default to true, allowing movement
 
     [Header("Gas Settings")]
     [SerializeField] private float gasMaximum = 60f;
@@ -56,7 +58,6 @@ public class Ship : MonoBehaviour
             Submarineanimator = GetComponent<Animator>();
         }
 
-        UpdateCombinedBounds();
     }
 
     void Update()
@@ -86,6 +87,12 @@ public class Ship : MonoBehaviour
 
     private void HandleMovement()
     {
+        if (!CanMove)
+        {
+            velocity = Vector2.zero; // Stop the ship if movement is disabled
+            return;
+        }
+
         input = Vector2.zero;
 
         if (Input.GetKey(KeyCode.W)) input.y = 1f;
@@ -115,13 +122,9 @@ public class Ship : MonoBehaviour
         }
 
         Vector3 newPosition = transform.position + (Vector3)(velocity * Time.deltaTime);
-
-        // Clamp the position within the combined bounds
         newPosition = ClampPositionWithinBounds(newPosition);
-
         transform.position = newPosition;
     }
-
     private Vector3 ClampPositionWithinBounds(Vector3 targetPosition)
     {
         if (combinedBounds.size != Vector3.zero)
@@ -130,29 +133,6 @@ public class Ship : MonoBehaviour
             targetPosition.y = Mathf.Clamp(targetPosition.y, combinedBounds.min.y, combinedBounds.max.y);
         }
         return targetPosition;
-    }
-
-    private void UpdateCombinedBounds()
-    {
-        Collider2D[] cameraWalls = GameObject.FindGameObjectsWithTag("Camera_wall")
-            .Select(go => go.GetComponent<Collider2D>())
-            .Where(c => c != null)
-            .ToArray();
-
-        if (cameraWalls.Length > 0)
-        {
-            combinedBounds = cameraWalls[0].bounds;
-
-            foreach (var collider in cameraWalls)
-            {
-                combinedBounds.Encapsulate(collider.bounds);
-            }
-        }
-        else
-        {
-            Debug.LogWarning("No colliders found with the tag 'Camera_wall'. The ship will move freely.");
-            combinedBounds = new Bounds(Vector3.zero, Vector3.positiveInfinity); // No restriction
-        }
     }
 
     private void HandleLights()
