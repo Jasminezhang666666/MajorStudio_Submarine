@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6508225902211569317}
   - component: {fileID: 8568655570616450121}
   - component: {fileID: 1522575717321580211}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Enemy_Fish
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -169,10 +169,10 @@ Rigidbody2D:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 55
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0

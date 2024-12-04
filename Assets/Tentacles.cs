@@ -3,8 +3,14 @@ using UnityEngine;
 
 public class Tentacles : MonoBehaviour
 {
+    [Header("General")]
+
     [SerializeField] private GameObject normalStateObject;
     [SerializeField] private GameObject attackStateObject;
+    [SerializeField] private float damageAmount = 5f;
+
+    [Header("Space Bar Escape")]
+
     [SerializeField] private float PressTimeFrame = 5f;
     [SerializeField] private Vector2 requiredPressRange = new Vector2(7, 10); // Random range of required presses
     [SerializeField] private float coolDownDuration = 7f; // Cooldown time after reverting to normal state
@@ -17,6 +23,8 @@ public class Tentacles : MonoBehaviour
     private Coroutine PressCoroutine;
     private Coroutine shakeCoroutine;
     private GameObject playerShip;
+
+
 
     private void Start()
     {
@@ -43,12 +51,14 @@ public class Tentacles : MonoBehaviour
             if (playerShipScript != null)
             {
                 playerShipScript.CanMove = false; // Disable movement
+                playerShipScript.TakeDamage(damageAmount);
             }
 
             playerShip = player;
             StartPressMiniGame();
         }
     }
+
 
     private void SetNormalState()
     {
@@ -119,8 +129,14 @@ public class Tentacles : MonoBehaviour
             yield return null;
         }
 
-        // Restart mini-game if failed
-        StartPressMiniGame();
+        // Restart mini-game if failed, and reduce health
+        Ship playerShipScript = playerShip.GetComponent<Ship>();
+        if (playerShipScript != null)
+        {
+            playerShipScript.TakeDamage(damageAmount); // Reduce health if failed
+        }
+
+        StartPressMiniGame(); // Restart the mini-game
     }
 
     private void ExitAttackState()
