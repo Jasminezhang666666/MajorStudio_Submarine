@@ -150,7 +150,7 @@ public class EnemyFish : MonoBehaviour
 
             if (CameraShake.Instance != null)
             {
-                CameraShake.Instance.ShakeCamera(); // Short shake after collision
+                CameraShake.Instance.ShakeCamera(1.5f, 0.5f);
             }
 
             hitCount++; // Increment hit count

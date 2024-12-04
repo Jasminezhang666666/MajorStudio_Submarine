@@ -5,14 +5,17 @@ public class Tentacles : MonoBehaviour
 {
     [SerializeField] private GameObject normalStateObject;
     [SerializeField] private GameObject attackStateObject;
-    [SerializeField] private float wPressTimeFrame = 5f; // Time frame to press "W" multiple times
-    [SerializeField] private Vector2 requiredWPressRange = new Vector2(7, 10); // Random range of required "W" presses
+    [SerializeField] private float PressTimeFrame = 5f;
+    [SerializeField] private Vector2 requiredPressRange = new Vector2(7, 10); // Random range of required presses
     [SerializeField] private float coolDownDuration = 7f; // Cooldown time after reverting to normal state
+    [SerializeField] private float shakeIntensityDuringMiniGame = 0.3f; // Reduced intensity during mini-game
+    [SerializeField] private float shakeDurationDuringMiniGame = 0.1f; // Duration of each shake while in mini-game
 
     private bool inCoolDown = false;
-    private int requiredWPresses;
-    private int currentWPressCount;
-    private Coroutine wPressCoroutine;
+    private int requiredPresses;
+    private int currentPressCount;
+    private Coroutine PressCoroutine;
+    private Coroutine shakeCoroutine;
     private GameObject playerShip;
 
     private void Start()
@@ -43,7 +46,7 @@ public class Tentacles : MonoBehaviour
             }
 
             playerShip = player;
-            StartWPressMiniGame();
+            StartPressMiniGame();
         }
     }
 
@@ -67,28 +70,45 @@ public class Tentacles : MonoBehaviour
         playerShip = null;
     }
 
-    private void StartWPressMiniGame()
+    private void StartPressMiniGame()
     {
-        requiredWPresses = Random.Range((int)requiredWPressRange.x, (int)requiredWPressRange.y + 1);
-        currentWPressCount = 0;
+        requiredPresses = Random.Range((int)requiredPressRange.x, (int)requiredPressRange.y + 1);
+        currentPressCount = 0;
 
-        if (wPressCoroutine != null)
+        if (PressCoroutine != null)
         {
-            StopCoroutine(wPressCoroutine);
+            StopCoroutine(PressCoroutine);
         }
-        wPressCoroutine = StartCoroutine(WPressMiniGameCoroutine());
+
+        // Start continuous shaking with reduced intensity
+        if (shakeCoroutine != null)
+        {
+            StopCoroutine(shakeCoroutine);
+        }
+        shakeCoroutine = StartCoroutine(StartContinuousShake());
+
+        PressCoroutine = StartCoroutine(PressMiniGameCoroutine());
     }
 
-    private IEnumerator WPressMiniGameCoroutine()
+    private IEnumerator StartContinuousShake()
+    {
+        while (true)
+        {
+            CameraShake.Instance.ShakeCamera(shakeIntensityDuringMiniGame, shakeDurationDuringMiniGame);
+            yield return new WaitForSeconds(shakeDurationDuringMiniGame); // Delay between shakes
+        }
+    }
+
+    private IEnumerator PressMiniGameCoroutine()
     {
         float elapsedTime = 0f;
 
-        while (elapsedTime < wPressTimeFrame)
+        while (elapsedTime < PressTimeFrame)
         {
-            if (Input.GetKeyDown(KeyCode.W))
+            if (Input.GetKeyDown(KeyCode.Space))
             {
-                currentWPressCount++;
-                if (currentWPressCount >= requiredWPresses)
+                currentPressCount++;
+                if (currentPressCount >= requiredPresses)
                 {
                     ExitAttackState();
                     yield break;
@@ -100,12 +120,20 @@ public class Tentacles : MonoBehaviour
         }
 
         // Restart mini-game if failed
-        StartWPressMiniGame();
+        StartPressMiniGame();
     }
 
     private void ExitAttackState()
     {
-        StopCoroutine(wPressCoroutine);
+        StopCoroutine(PressCoroutine);
+
+        // Stop shaking when exiting the attack state
+        if (shakeCoroutine != null)
+        {
+            StopCoroutine(shakeCoroutine);
+        }
+
+        CameraShake.Instance.ShakeCamera(0.3f, 0.5f);
         SetNormalState();
         StartCoroutine(CoolDownCoroutine());
     }
