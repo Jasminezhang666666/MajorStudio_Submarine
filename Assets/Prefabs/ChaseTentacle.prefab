@@ -99,10 +99,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c4a556be77514d44aaab426d741710a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  accelerationFactor: 1.8
+  accelerationFactor: 3
   decelerationFactor: 0.7
-  minDistance: 3.5
-  maxDistance: 7
+  thrustSpeedFactor: 3
+  thrustDuration: 0.5
+  thrustCooldown: 5
+  minDistance: 9
+  maxDistance: 11
+  thrustTriggerDistance: 8
+  maxChaseRange: 20
 --- !u!60 &2709315994864549445
 PolygonCollider2D:
   m_ObjectHideFlags: 0

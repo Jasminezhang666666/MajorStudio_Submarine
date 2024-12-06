@@ -9,60 +9,113 @@ public class ChaseTentacle : MonoBehaviour
     private float decelerateSpeed;
 
     [Header("Speed Settings")]
-    [SerializeField] private float accelerationFactor = 1.5f;
-    [SerializeField] private float decelerationFactor = 0.7f;
+    [SerializeField] public float accelerationFactor = 1.5f;
+    [SerializeField] public float decelerationFactor = 0.7f;
+    [SerializeField] public float thrustSpeedFactor = 2.0f; // 突刺速度倍数
+    [SerializeField] public float thrustDuration = 0.5f; // 突刺持续时间
+    [SerializeField] public float thrustCooldown = 3f; // 突刺冷却时间
 
     [Header("Distance Settings")]
-    [SerializeField] private float minDistance = 5f;
-    [SerializeField] private float maxDistance = 10f;
+    [SerializeField] public float minDistance = 5f;
+    [SerializeField] public float maxDistance = 10f;
+    [SerializeField] public float thrustTriggerDistance = 8f; // 突刺触发距离
+    [SerializeField] public float maxChaseRange = 20f; // 最大追击范围
 
     private bool isStopped = false; // 标记触手是否停止
+    private bool isThrusting = false; // 是否正在突刺
+    private float thrustTimer = 0f; // 突刺冷却计时器
+    private float thrustEndTime = 0f; // 突刺结束时间
 
     public void Initialize(Transform playerTransform)
     {
+        if (playerTransform == null)
+        {
+            Debug.LogError("Player transform is null!");
+            return;
+        }
+
         player = playerTransform;
         playerShip = player.GetComponent<Ship>();
 
-        if (playerShip != null)
+        if (playerShip == null)
         {
-            currentSpeed = playerShip.GetCurrentSpeed();
-            accelerateSpeed = currentSpeed * accelerationFactor;
-            decelerateSpeed = currentSpeed * decelerationFactor;
+            Debug.LogError("Player does not have a Ship component!");
+            return;
         }
+
+        currentSpeed = playerShip.GetCurrentSpeed();
+        accelerateSpeed = currentSpeed * accelerationFactor;
+        decelerateSpeed = currentSpeed * decelerationFactor;
     }
 
     private void Update()
     {
-        if (isStopped) return; // 如果已停止，不再移动
+        if (isStopped || player == null || playerShip == null) return;
 
-        if (player == null || playerShip == null) return;
-
-        // current Speed
+        // 获取玩家的速度和距离
         float playerSpeed = playerShip.GetCurrentSpeed();
-
-        // Distance of player between the tentacle
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
-        // Speed
-        if (distanceToPlayer < minDistance)
+        // 停止追击逻辑
+        if (distanceToPlayer > maxChaseRange)
         {
-            Debug.Log("Deacelerate");
-            currentSpeed = Mathf.Lerp(currentSpeed, decelerateSpeed, Time.deltaTime);
+            Debug.Log("Player out of range. Stopping chase.");
+            StopAndDestroy();
+            return;
         }
-        else if (distanceToPlayer > maxDistance)
+
+        // 突刺冷却计时
+        if (thrustTimer > 0f)
         {
-            Debug.Log("Accelerate");
-            currentSpeed = Mathf.Lerp(currentSpeed, accelerateSpeed, Time.deltaTime);
+            thrustTimer -= Time.deltaTime;
         }
-        else
+
+        // 突刺逻辑
+        if (isThrusting)
         {
-            Debug.Log("Keep up with the player");
-            currentSpeed = Mathf.Lerp(currentSpeed, playerSpeed, Time.deltaTime);
+            if (Time.time >= thrustEndTime)
+            {
+                // 突刺结束，恢复到正常速度
+                isThrusting = false;
+                currentSpeed = playerSpeed;
+                Debug.Log("Thrust ended. Matching player speed.");
+            }
         }
-        Debug.Log("Distance: " + currentSpeed);
+        else if (thrustTimer <= 0f && distanceToPlayer > thrustTriggerDistance)
+        {
+            // 触发突刺
+            StartThrust(playerSpeed);
+        }
+
+        // 根据距离调整速度（突刺时不调整）
+        if (!isThrusting)
+        {
+            if (distanceToPlayer < minDistance)
+            {
+                currentSpeed = Mathf.MoveTowards(currentSpeed, decelerateSpeed, Time.deltaTime * 2f);
+            }
+            else if (distanceToPlayer > maxDistance)
+            {
+                currentSpeed = Mathf.MoveTowards(currentSpeed, accelerateSpeed, Time.deltaTime * 2f);
+            }
+            else
+            {
+                currentSpeed = Mathf.MoveTowards(currentSpeed, playerSpeed, Time.deltaTime * 2f);
+            }
+        }
+
         // 按当前速度追击玩家
         Vector3 direction = (player.position - transform.position).normalized;
         transform.position += direction * currentSpeed * Time.deltaTime;
+    }
+
+    private void StartThrust(float playerSpeed)
+    {
+        isThrusting = true;
+        thrustTimer = thrustCooldown;
+        thrustEndTime = Time.time + thrustDuration;
+        currentSpeed = playerSpeed * thrustSpeedFactor; // 突刺速度
+        Debug.Log("Thrusting towards player!");
     }
 
     // 停止触手并销毁
