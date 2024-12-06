@@ -30,9 +30,12 @@ public class GroundTentacle : MonoBehaviour
 
         //distance between player and tentacle
         Vector2 rayDirection = thrustUpwards ? Vector2.up : Vector2.down; 
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, rayDirection, detectionDistance);
+        Vector2 rayCastStart = new Vector2(transform.position.x, transform.position.y + rayDirection.y * GetComponent<BoxCollider2D>().size.y);
+        RaycastHit2D hit = Physics2D.Raycast(rayCastStart, rayDirection, detectionDistance);
 
-        Debug.DrawRay(transform.position, rayDirection * detectionDistance, Color.red); 
+        Debug.DrawRay(rayCastStart, rayDirection * detectionDistance, Color.red);
+
+        //Debug.Log("hit collider" + hit.collider.gameObject.name);
 
         if (hit.collider != null && hit.collider.CompareTag("Player"))
         {
