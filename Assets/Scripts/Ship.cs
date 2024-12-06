@@ -203,16 +203,30 @@ public class Ship : MonoBehaviour
             autoLight.enabled = true;
         }
     }
-
     private void Die()
     {
-        respawnPosition = SaveManager.LoadGasStationPosition();
-        if (respawnPosition == Vector3.zero) respawnPosition = defaultStartPosition;
+        CanMove = false;
 
-        transform.position = respawnPosition;
-        currentGas = gasMaximum;
-        damageAmount = SaveManager.LoadPlayerDamage();
+        if (Submarineanimator != null)
+        {
+            Submarineanimator.SetTrigger("Submarine_crack_anim");
+        }
+
+        StartCoroutine(WaitForAnimationAndLoadScene());
     }
+
+    private System.Collections.IEnumerator WaitForAnimationAndLoadScene()
+    {
+        if (Submarineanimator != null)
+        {
+            Submarineanimator.SetTrigger("Submarine_crack_anim");
+        }
+
+        yield return new WaitForSeconds(3f);
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Death");
+    }
+
+
 
     public void TakeDamage(float amount)
     {
