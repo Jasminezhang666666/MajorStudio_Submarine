@@ -1,10 +1,11 @@
 using UnityEngine;
-using UnityEngine.Experimental.GlobalIllumination;
+using TMPro;
 using UnityEngine.Rendering.Universal;
 
 public class GasStation : MonoBehaviour
 {
     [SerializeField] private Sprite usedSprite;
+    [SerializeField] private TextDisplay gasRefillText; // Reference to the specific TextDisplay component
     private SpriteRenderer spriteRenderer;
     private bool isUsed = false;
     public Light2D gasLight;
@@ -31,6 +32,12 @@ public class GasStation : MonoBehaviour
 
                 // Save the gas station's state
                 SaveManager.SaveGasStation(transform.position, ship.GetDamageAmount());
+
+                // Trigger the specific TextDisplay instance for the gas refill message
+                if (gasRefillText != null)
+                {
+                    gasRefillText.ShowMessage();
+                }
             }
         }
     }

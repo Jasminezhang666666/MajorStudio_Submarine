@@ -10,7 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8227723697043537885}
   - component: {fileID: 5213680789143398428}
-  - component: {fileID: 6966990765025665562}
+  - component: {fileID: 7534980290854419142}
+  - component: {fileID: 6812976927147131372}
   m_Layer: 0
   m_Name: HP cover
   m_TagString: Untagged
@@ -74,9 +75,9 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 3
   m_Sprite: {fileID: 21300000, guid: 6568e8cb8da7df542b0a79b3be777af0, type: 3}
-  m_Color: {r: 0.6792453, g: 0.6792453, b: 0.6792453, a: 1}
+  m_Color: {r: 0.5754717, g: 0.5754717, b: 0.5754717, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -86,7 +87,22 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!60 &6966990765025665562
+--- !u!114 &7534980290854419142
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3020283542878748356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e15d2595aecddd4a9b005d059392f99, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hpRestoreAmount: 10
+  hpRecoverText: {fileID: 0}
+  displayDuration: 2
+--- !u!60 &6812976927147131372
 PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

@@ -6,9 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
-    guid: 2cda990e2423bbf4892e6590ba056729
+    path: Assets/Scenes/JasmineChase.unity
+    guid: 28b90b8af1cd0e044b38b781f48b8fe5
   - enabled: 1
-    path: Assets/Scenes/JasmineScene.unity
-    guid: 63225ebca33ca154789183f19c8db3bb
+    path: Assets/Scenes/Death.unity
+    guid: 5f2d2ffb27c0d0842ade90e33f5caaa4
   m_configObjects: {}
