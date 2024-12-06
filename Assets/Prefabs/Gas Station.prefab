@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3956563133056825254}
   - component: {fileID: 190627889593394278}
   - component: {fileID: 6589408765984998062}
+  - component: {fileID: 4645614073302937569}
   m_Layer: 0
   m_Name: Gas Station
   m_TagString: Untagged
@@ -76,9 +77,9 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 7dddc972a225738498a041940b13c0df, type: 3}
-  m_Color: {r: 0.9245283, g: 0.3174795, b: 0.3174795, a: 1}
+  m_Color: {r: 0.6226415, g: 0.6226415, b: 0.6226415, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -101,7 +102,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   usedSprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  gasLight: {fileID: 0}
+  gasRefillText: {fileID: 0}
+  gasLight: {fileID: 7588390811454941368}
 --- !u!60 &190627889593394278
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -263,8 +265,8 @@ MonoBehaviour:
   m_LightType: 1
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0.5
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1
+  m_Color: {r: 1, g: 0.24213827, b: 0.24213827, a: 1}
+  m_Intensity: 2.16
   m_LightVolumeIntensity: 1
   m_LightVolumeIntensityEnabled: 0
   m_ApplyToSortingLayers: 00000000
@@ -310,6 +312,22 @@ MonoBehaviour:
   - {x: -0.5809391, y: 0.9860145, z: 0}
   - {x: -0.74764264, y: -0.25918007, z: 0}
   - {x: -0.6998885, y: -0.44370627, z: 0}
+--- !u!114 &4645614073302937569
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1262203228508372690}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc664b69c38231a49b765ca86371ea8d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  light2D: {fileID: 6589408765984998062}
+  minIntensity: 0.5
+  maxIntensity: 1.5
+  flashSpeed: 5
 --- !u!1 &5262680507154097086
 GameObject:
   m_ObjectHideFlags: 0

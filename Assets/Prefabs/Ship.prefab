@@ -250,12 +250,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe3bcc53d6971694ca971dee9e0a51f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 2
-  acceleration: 0.5
-  deceleration: 1
+  maxSpeed: 1.8
+  acceleration: 1
+  deceleration: 2
   currentSpeed: 0
   gasMaximum: 40
-  gasDecreaseRate: 0.2
+  gasDecreaseRate: 1
   damageAmount: 40
   Submarineanimator: {fileID: 1532181340626631942}
   directionalLight: {fileID: 4026522475998136106}
@@ -291,7 +291,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 1
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!60 &1413224860964090282
 PolygonCollider2D:
   m_ObjectHideFlags: 0
