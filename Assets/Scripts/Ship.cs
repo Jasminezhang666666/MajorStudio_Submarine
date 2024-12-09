@@ -39,7 +39,8 @@ public class Ship : MonoBehaviour
     [SerializeField] private Color normalColor = Color.white;
     private bool isFlashing = false;
 
-    private Bounds combinedBounds;
+    private LayerMask wallLayerMask;
+
 
     void Start()
     {
@@ -58,6 +59,7 @@ public class Ship : MonoBehaviour
             Submarineanimator = GetComponent<Animator>();
         }
 
+        wallLayerMask = LayerMask.GetMask("Ship_Walls");
     }
 
     void Update()
@@ -95,6 +97,7 @@ public class Ship : MonoBehaviour
 
         input = Vector2.zero;
 
+        // Get input
         if (Input.GetKey(KeyCode.W)) input.y = 1f;
         if (Input.GetKey(KeyCode.S)) input.y = -1f;
         if (Input.GetKey(KeyCode.A)) input.x = -1f;
@@ -121,19 +124,23 @@ public class Ship : MonoBehaviour
             velocity = Vector2.MoveTowards(velocity, Vector2.zero, deceleration * Time.deltaTime);
         }
 
-        Vector3 newPosition = transform.position + (Vector3)(velocity * Time.deltaTime);
-        newPosition = ClampPositionWithinBounds(newPosition);
-        transform.position = newPosition;
-    }
-    private Vector3 ClampPositionWithinBounds(Vector3 targetPosition)
-    {
-        if (combinedBounds.size != Vector3.zero)
+        // Predict the new position
+        Vector3 predictedPosition = transform.position + (Vector3)(velocity * Time.deltaTime);
+
+        // Check if the predicted position collides with walls
+        Collider2D wallCollider = Physics2D.OverlapPoint(predictedPosition, LayerMask.GetMask("Ship_Walls"));
+        if (wallCollider == null)
         {
-            targetPosition.x = Mathf.Clamp(targetPosition.x, combinedBounds.min.x, combinedBounds.max.x);
-            targetPosition.y = Mathf.Clamp(targetPosition.y, combinedBounds.min.y, combinedBounds.max.y);
+            // No collision, move the ship
+            transform.position = predictedPosition;
         }
-        return targetPosition;
+        else
+        {
+            // Collision detected, stop the movement
+            velocity = Vector2.zero;
+        }
     }
+
 
     private void HandleLights()
     {
@@ -196,16 +203,30 @@ public class Ship : MonoBehaviour
             autoLight.enabled = true;
         }
     }
-
     private void Die()
     {
-        respawnPosition = SaveManager.LoadGasStationPosition();
-        if (respawnPosition == Vector3.zero) respawnPosition = defaultStartPosition;
+        CanMove = false;
 
-        transform.position = respawnPosition;
-        currentGas = gasMaximum;
-        damageAmount = SaveManager.LoadPlayerDamage();
+        if (Submarineanimator != null)
+        {
+            Submarineanimator.SetTrigger("Submarine_crack_anim");
+        }
+
+        StartCoroutine(WaitForAnimationAndLoadScene());
     }
+
+    private System.Collections.IEnumerator WaitForAnimationAndLoadScene()
+    {
+        if (Submarineanimator != null)
+        {
+            Submarineanimator.SetTrigger("Submarine_crack_anim");
+        }
+
+        yield return new WaitForSeconds(3f);
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Death");
+    }
+
+
 
     public void TakeDamage(float amount)
     {
