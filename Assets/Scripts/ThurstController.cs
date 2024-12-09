@@ -43,7 +43,14 @@ public class GroundTentacle : MonoBehaviour
             //thrust if in distance
             if (!isThrusting)
             {
+                
                 StartCoroutine(Thrust());
+                if (CameraShake.Instance != null)
+                {
+                    CameraShake.Instance.ShakeCamera(1.5f, 0.5f);
+                }
+
+
             }
         }
     }
