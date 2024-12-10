@@ -1,7 +1,10 @@
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using TMPro;
+using UnityEngine.UI;
 using UnityEngine.Rendering.Universal;
+using System.Collections;
 
 public class Ship : MonoBehaviour
 {
@@ -37,7 +40,13 @@ public class Ship : MonoBehaviour
     [SerializeField] private float directionalnormalIntensity = 12f;
     [SerializeField] private Color dangerColor = Color.red;
     [SerializeField] private Color normalColor = Color.white;
-    private bool isFlashing = false;
+
+    [Header("UI Settings")]
+    [SerializeField] private GameObject flashRedUI; // UI object for flashing red
+    [SerializeField] private TextMeshProUGUI warningText; // Text for displaying warnings
+    [SerializeField] private float flashSpeed = 2f; // Speed of the flash effect
+
+    private bool isFlashingRed = false;
 
     private LayerMask wallLayerMask;
 
@@ -85,6 +94,8 @@ public class Ship : MonoBehaviour
 
         // Handle lights based on damage
         HandleLights();
+
+        HandleFlashingUI();
     }
 
     private void HandleMovement()
@@ -157,10 +168,10 @@ public class Ship : MonoBehaviour
                 autoLight.intensity = lowIntensity;
                 autoLight.color = dangerColor;
 
-                if (!isFlashing)
+                if (!isFlashingRed)
                 {
                     StartCoroutine(FlashAutoLight());
-                    isFlashing = true;
+                    isFlashingRed = true;
                 }
             }
         }
@@ -177,11 +188,11 @@ public class Ship : MonoBehaviour
                 autoLight.intensity = normalIntensity;
                 autoLight.color = normalColor;
 
-                if (isFlashing)
+                if (isFlashingRed)
                 {
                     StopAllCoroutines();
                     autoLight.enabled = true;
-                    isFlashing = false;
+                    isFlashingRed = false;
                 }
             }
         }
@@ -235,7 +246,7 @@ public class Ship : MonoBehaviour
 
         if (damageAmount <= 0)
         {
-            Die(); 
+            Die();
         }
     }
 
@@ -264,4 +275,105 @@ public class Ship : MonoBehaviour
     {
         return currentSpeed;
     }
+
+    private Coroutine flashCoroutine;
+
+    private void HandleFlashingUI()
+    {
+        // 确定警告信息
+        string warningMessage = "";
+        if (damageAmount < 40f && currentGas < 40f)
+        {
+            warningMessage = "WARNING WARNING WARNING";
+        }
+        else if (damageAmount < 40f)
+        {
+            warningMessage = "LOW HEALTH ALERT";
+        }
+        else if (currentGas < 40f)
+        {
+            warningMessage = "LOW ENERGY ALERT";
+        }
+
+        // 激活 UI
+        if (!string.IsNullOrEmpty(warningMessage))
+        {
+            if (warningText != null)
+            {
+                warningText.text = warningMessage;
+
+                // 启动闪烁效果
+                if (flashCoroutine == null)
+                {
+                    flashCoroutine = StartCoroutine(FlashText(warningText));
+                }
+            }
+
+            if (flashRedUI != null)
+            {
+                flashRedUI.SetActive(true);
+            }
+        }
+        else
+        {
+            if (warningText != null)
+            {
+                warningText.text = "";
+
+                // 停止闪烁效果
+                if (flashCoroutine != null)
+                {
+                    StopCoroutine(flashCoroutine);
+                    flashCoroutine = null;
+                    SetTextAlpha(warningText, 1f); // 恢复完全不透明
+                }
+            }
+
+            if (flashRedUI != null)
+            {
+                flashRedUI.SetActive(false);
+            }
+        }
+    }
+
+    // 文本闪烁协程
+    private IEnumerator FlashText(TextMeshProUGUI text)
+    {
+        float alpha = 1f;
+        bool fadingOut = true;
+
+        while (true)
+        {
+            if (fadingOut)
+            {
+                alpha -= Time.deltaTime * flashSpeed; // 减少透明度
+                if (alpha <= 0f)
+                {
+                    alpha = 0f;
+                    fadingOut = false;
+                }
+            }
+            else
+            {
+                alpha += Time.deltaTime * flashSpeed; // 增加透明度
+                if (alpha >= 1f)
+                {
+                    alpha = 1f;
+                    fadingOut = true;
+                }
+            }
+
+            SetTextAlpha(text, alpha);
+            yield return null;
+        }
+    }
+
+    // 设置文本透明度
+    private void SetTextAlpha(TextMeshProUGUI text, float alpha)
+    {
+        Color color = text.color;
+        color.a = alpha;
+        text.color = color;
+    }
+
 }
