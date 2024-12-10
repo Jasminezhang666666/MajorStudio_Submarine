@@ -33,7 +33,8 @@ public class GroundTentacle : MonoBehaviour
         Vector2 rayCastStart = new Vector2(transform.position.x, transform.position.y + rayDirection.y * GetComponent<BoxCollider2D>().size.y);
         RaycastHit2D hit = Physics2D.Raycast(rayCastStart, rayDirection, detectionDistance);
 
-        Debug.DrawRay(rayCastStart, rayDirection * detectionDistance, Color.red);
+        //Debug.DrawRay(rayCastStart, rayDirection * detectionDistance, Color.white);
+        Debug.DrawLine(transform.position, rayCastStart, Color.red);
 
         //Debug.Log("hit collider" + hit.collider.gameObject.name);
 

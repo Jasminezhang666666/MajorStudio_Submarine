@@ -341,7 +341,7 @@ private IEnumerator PlayIntroVoiceAndEnableMovement()
             {
                 PlayLowGasSound();
             }
-            warningMessage = "LOW ENERGY ALERT";
+            warningMessage = "LOW GAS ALERT";
         }
 
         // ¼¤»î UI
