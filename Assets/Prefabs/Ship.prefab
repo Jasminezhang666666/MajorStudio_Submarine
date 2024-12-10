@@ -252,12 +252,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe3bcc53d6971694ca971dee9e0a51f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 1.8
+  maxSpeed: 1.6
   acceleration: 1
   deceleration: 2
   currentSpeed: 0
-  gasMaximum: 60
-  gasStart: 50
+  gasMaximum: 100
+  gasStart: 55
   gasDecreaseRate: 1
   damageAmount: 60
   Submarineanimator: {fileID: 1532181340626631942}
@@ -459,7 +459,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 4c8a8164f29b42d40b7816f4898913e8, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.281
+  m_Volume: 1
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -555,7 +555,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 1f2f16d87b4729b47a022fada192b10a, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.21
+  m_Volume: 1
   m_Pitch: 1
   Loop: 0
   Mute: 0
