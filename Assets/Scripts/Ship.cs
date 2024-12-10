@@ -16,7 +16,8 @@ public class Ship : MonoBehaviour
     public bool CanMove { get; set; } = true; // Default to true, allowing movement
 
     [Header("Gas Settings")]
-    [SerializeField] private float gasMaximum = 60f;
+    [SerializeField] private float gasMaximum = 100f;
+    [SerializeField] private float gasStart = 50f;
     [SerializeField] private float gasDecreaseRate = 0.2f;
     private float currentGas;
 
@@ -66,7 +67,7 @@ public class Ship : MonoBehaviour
     damageAmount = SaveManager.LoadPlayerDamage();
 
     transform.position = respawnPosition;
-    currentGas = gasMaximum;
+    currentGas = gasStart;
 
     if (Submarineanimator == null)
     {

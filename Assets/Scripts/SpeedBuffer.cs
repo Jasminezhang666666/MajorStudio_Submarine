@@ -3,7 +3,7 @@ using TMPro;
 
 public class SpeedBuffer : MonoBehaviour
 {
-    [SerializeField] private float speedBoost = 2f; // Speed boost amount
+    [SerializeField] private float speedBoost = 1f; // Speed boost amount
     [SerializeField] private float boostDuration = 5f; // Duration of the speed boost
     [SerializeField] private TextDisplay speedBoostText; // Reference to the TextDisplay component for the speed boost message
 

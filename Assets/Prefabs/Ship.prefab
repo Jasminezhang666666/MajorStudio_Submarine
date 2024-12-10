@@ -257,6 +257,7 @@ MonoBehaviour:
   deceleration: 2
   currentSpeed: 0
   gasMaximum: 60
+  gasStart: 50
   gasDecreaseRate: 1
   damageAmount: 60
   Submarineanimator: {fileID: 1532181340626631942}
@@ -314,7 +315,7 @@ PolygonCollider2D:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1024
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
