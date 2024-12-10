@@ -50,26 +50,59 @@ public class Ship : MonoBehaviour
 
     private LayerMask wallLayerMask;
 
+    [Header("Audio Settings")]
+    [SerializeField] private AudioSource introVoice; // AA
+    [SerializeField] private AudioSource sound3;     // Low gas warning: 3
+
+    private bool hasPlayedLowGasSound = false;
 
     void Start()
+{
+    defaultStartPosition = transform.position;
+
+    Vector3 savedPosition = SaveManager.LoadGasStationPosition();
+    respawnPosition = savedPosition != Vector3.zero ? savedPosition : defaultStartPosition;
+
+    damageAmount = SaveManager.LoadPlayerDamage();
+
+    transform.position = respawnPosition;
+    currentGas = gasMaximum;
+
+    if (Submarineanimator == null)
     {
-        defaultStartPosition = transform.position;
-
-        Vector3 savedPosition = SaveManager.LoadGasStationPosition();
-        respawnPosition = savedPosition != Vector3.zero ? savedPosition : defaultStartPosition;
-
-        damageAmount = SaveManager.LoadPlayerDamage();
-
-        transform.position = respawnPosition;
-        currentGas = gasMaximum;
-
-        if (Submarineanimator == null)
-        {
-            Submarineanimator = GetComponent<Animator>();
-        }
-
-        wallLayerMask = LayerMask.GetMask("Ship_Walls");
+        Submarineanimator = GetComponent<Animator>();
     }
+
+    // Set the animator to the idle state at the start
+    Submarineanimator.SetBool("IsIdle", true);
+
+    wallLayerMask = LayerMask.GetMask("Ship_Walls");
+
+    // Disable movement initially
+    CanMove = false;
+
+    StartCoroutine(PlayIntroVoiceAndEnableMovement());
+}
+
+private IEnumerator PlayIntroVoiceAndEnableMovement()
+{
+    if (introVoice != null && introVoice.clip != null)
+    {
+        introVoice.Play();
+        yield return new WaitForSeconds(introVoice.clip.length); // Wait for the duration of the clip
+    }
+    else
+    {
+        Debug.LogWarning("IntroVoice AudioSource or clip is not assigned. Falling back to 14 seconds delay.");
+        yield return new WaitForSeconds(14f); // Fallback duration
+    }
+
+    // Enable movement
+    CanMove = true;
+
+    // Set idle to false if input is detected (optional for when movement starts)
+    Submarineanimator.SetBool("IsIdle", false);
+}
 
     void Update()
     {
@@ -98,6 +131,17 @@ public class Ship : MonoBehaviour
         HandleFlashingUI();
     }
 
+    private void PlayLowGasSound()
+    {
+        if (sound3 != null)
+        {
+            sound3.Play();
+            Debug.Log("Playing sound 3.");
+            hasPlayedLowGasSound = true; // Ensure the sound plays only once
+        }
+    }
+
+ 
     private void HandleMovement()
     {
         if (!CanMove)
@@ -290,8 +334,12 @@ public class Ship : MonoBehaviour
         {
             warningMessage = "LOW HEALTH ALERT";
         }
-        else if (currentGas < 40f)
+        else if (currentGas < 30f)
         {
+            if (!hasPlayedLowGasSound)
+            {
+                PlayLowGasSound();
+            }
             warningMessage = "LOW ENERGY ALERT";
         }
 

@@ -4,7 +4,7 @@ using UnityEngine.Rendering.Universal;
 
 public class GasStation : MonoBehaviour
 {
-    [SerializeField] private Sprite usedSprite;
+    [SerializeField] private Color usedColor = Color.white; // Customizable color for the used state
     [SerializeField] private TextDisplay gasRefillText; // Reference to the specific TextDisplay component
     private SpriteRenderer spriteRenderer;
     private bool isUsed = false;
@@ -26,8 +26,8 @@ public class GasStation : MonoBehaviour
                 Debug.Log("Gas refilled!");
                 isUsed = true;
 
-                // Change sprite to indicate the gas station is used
-                spriteRenderer.sprite = usedSprite;
+                // Change the color to indicate the gas station is used
+                spriteRenderer.color = usedColor;
                 gasLight.enabled = !gasLight.enabled;
 
                 // Save the gas station's state

@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 190627889593394278}
   - component: {fileID: 6589408765984998062}
   - component: {fileID: 4645614073302937569}
+  - component: {fileID: 2133196866155486632}
   m_Layer: 0
   m_Name: Gas Station
   m_TagString: Untagged
@@ -101,7 +102,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfa73260f501def4ebe4094852a06d8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  usedSprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  usedColor: {r: 0.31132078, g: 0.31132078, b: 0.31132078, a: 1}
   gasRefillText: {fileID: 0}
   gasLight: {fileID: 7588390811454941368}
 --- !u!60 &190627889593394278
@@ -328,6 +329,19 @@ MonoBehaviour:
   minIntensity: 0.5
   maxIntensity: 1.5
   flashSpeed: 5
+--- !u!114 &2133196866155486632
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1262203228508372690}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc9220b2e6ec41a4993b5ea80a4fb8af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  voiceAudioSource: {fileID: 0}
 --- !u!1 &5262680507154097086
 GameObject:
   m_ObjectHideFlags: 0
