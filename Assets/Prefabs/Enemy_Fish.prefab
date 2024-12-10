@@ -106,6 +106,7 @@ MonoBehaviour:
   backupDuration: 0.7
   wiggleMoveDistance: 8
   wiggleCycleTime: 0.2
+  animator: {fileID: 0}
 --- !u!61 &8568655570616450121
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -118,7 +119,7 @@ BoxCollider2D:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -173,7 +174,7 @@ Rigidbody2D:
     m_Bits: 256
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 55
+    m_Bits: 1079
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0

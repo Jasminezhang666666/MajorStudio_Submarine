@@ -1,41 +1,61 @@
+using Cinemachine;
 using UnityEngine;
 
 public class ChaseController : MonoBehaviour
 {
-    [Header("Chase Settings")]
-    [SerializeField] private GameObject chaseTentaclePrefab;
-    [SerializeField] public float spawnDistance = 5f; // distance between player and tentacle
-    [SerializeField] public float verticalOffset = -1f; // 垂直方向偏移量
+    public CinemachineVirtualCamera virtualCamera;
+    public float targetOrthoSize = 13f;
+    public float transitionSpeed = 2f;
+    public float shakeIntensity = 1f;
+    public float shakeDuration = 5f; // Example duration
+    private bool isTransitioning = false;
 
-    private Transform player;
-    private int tentacleCount = 0; // 记录生成的触手数量
+    private float initialOrthoSize;
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void Start()
     {
-        if (collision.CompareTag("Player"))
+        if (virtualCamera == null)
         {
-            player = collision.transform;
+            Debug.LogError("Virtual Camera is not assigned to ChaseController.");
+            return;
+        }
 
-            // 计算生成位置
-            Vector3 spawnPosition = player.position - player.right * spawnDistance;
-            Debug.Log("initial spawnPosition" + spawnPosition);
+        initialOrthoSize = virtualCamera.m_Lens.OrthographicSize;
+    }
 
-            // 根据触手数量添加垂直偏移
-            spawnPosition.y += tentacleCount * verticalOffset;
-            Debug.Log("second spawnPosition" + spawnPosition);
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Player")) // Ensure the player has this tag
+        {
+            StartCameraTransition();
+            CameraShake.Instance.ShakeCamera(shakeIntensity, shakeDuration);
+        }
+    }
 
-            // 生成触手
-            GameObject tentacle = Instantiate(chaseTentaclePrefab, spawnPosition, Quaternion.identity);
+    private void Update()
+    {
+        if (isTransitioning)
+        {
+            SmoothOrthoSizeTransition();
+        }
+    }
 
-            // 设置追击逻辑
-            ChaseTentacle tentacleController = tentacle.GetComponent<ChaseTentacle>();
-            if (tentacleController != null)
-            {
-                tentacleController.Initialize(player);
-            }
+    private void StartCameraTransition()
+    {
+        isTransitioning = true;
+    }
 
-            // 增加触手计数
-            tentacleCount++;
+    private void SmoothOrthoSizeTransition()
+    {
+        float currentSize = virtualCamera.m_Lens.OrthographicSize;
+        if (Mathf.Abs(currentSize - targetOrthoSize) > 0.01f)
+        {
+            virtualCamera.m_Lens.OrthographicSize = Mathf.Lerp(currentSize, targetOrthoSize, Time.deltaTime * transitionSpeed);
+        }
+        else
+        {
+            virtualCamera.m_Lens.OrthographicSize = targetOrthoSize;
+            isTransitioning = false;
         }
     }
 }
