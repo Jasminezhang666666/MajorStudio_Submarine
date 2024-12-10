@@ -28,13 +28,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7402270049921439204}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: 0.70352274, w: -0.71067274}
+  m_LocalRotation: {x: -0, y: -0, z: 0.020414215, w: -0.9997916}
   m_LocalPosition: {x: -16.8, y: -33.1, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 5, y: 5, z: 5}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -89.421}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -2.339}
 --- !u!212 &6575028478852805798
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -75,7 +75,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 8
   m_Sprite: {fileID: 21300000, guid: 25aad80fbb0462e48a4034b5fb180927, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -104,10 +104,10 @@ MonoBehaviour:
   thrustSpeedFactor: 3
   thrustDuration: 0.5
   thrustCooldown: 5
-  minDistance: 9
-  maxDistance: 11
+  minDistance: 100
+  maxDistance: 200
   thrustTriggerDistance: 8
-  maxChaseRange: 20
+  maxChaseRange: 40
 --- !u!60 &2709315994864549445
 PolygonCollider2D:
   m_ObjectHideFlags: 0

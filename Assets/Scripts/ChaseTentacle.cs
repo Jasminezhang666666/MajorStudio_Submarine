@@ -15,11 +15,10 @@ public class ChaseTentacle : MonoBehaviour
     [SerializeField] public float thrustDuration = 0.5f; // Í»´Ì³ÖÐøÊ±¼ä
     [SerializeField] public float thrustCooldown = 3f; // Í»´ÌÀäÈ´Ê±¼ä
 
-    [Header("Distance Settings")]
-    [SerializeField] public float minDistance = 5f;
-    [SerializeField] public float maxDistance = 10f;
-    [SerializeField] public float thrustTriggerDistance = 8f; // Í»´Ì´¥·¢¾àÀë
-    [SerializeField] public float maxChaseRange = 20f; // ×î´ó×·»÷·¶Î§
+    [SerializeField] public float minDistance = 4.5f; // Tentacle radius + buffer
+    [SerializeField] public float maxDistance = 10f; // Keep some distance for chase
+    [SerializeField] public float thrustTriggerDistance = 8f; // Trigger thrust farther away
+    [SerializeField] public float maxChaseRange = 25f; // Allow for a larger chase range
 
     private bool isStopped = false; // ±ê¼Ç´¥ÊÖÊÇ·ñÍ£Ö¹
     private bool isThrusting = false; // ÊÇ·ñÕýÔÚÍ»´Ì
@@ -59,8 +58,12 @@ public class ChaseTentacle : MonoBehaviour
         // Í£Ö¹×·»÷Âß¼­
         if (distanceToPlayer > maxChaseRange)
         {
-            Debug.Log("Player out of range. Stopping chase.");
-            StopAndDestroy();
+            Debug.Log("Player out of range. Slowing down and stopping chase.");
+            currentSpeed = Mathf.MoveTowards(currentSpeed, 0f, Time.deltaTime * 2f); // Gradually slow down
+            if (currentSpeed <= 0.1f)
+            {
+                StopAndDestroy();
+            }
             return;
         }
 
@@ -92,14 +95,17 @@ public class ChaseTentacle : MonoBehaviour
         {
             if (distanceToPlayer < minDistance)
             {
+                // Decelerate to maintain minimum distance
                 currentSpeed = Mathf.MoveTowards(currentSpeed, decelerateSpeed, Time.deltaTime * 2f);
             }
             else if (distanceToPlayer > maxDistance)
             {
+                // Accelerate to catch up
                 currentSpeed = Mathf.MoveTowards(currentSpeed, accelerateSpeed, Time.deltaTime * 2f);
             }
             else
             {
+                // Maintain player's speed
                 currentSpeed = Mathf.MoveTowards(currentSpeed, playerSpeed, Time.deltaTime * 2f);
             }
         }

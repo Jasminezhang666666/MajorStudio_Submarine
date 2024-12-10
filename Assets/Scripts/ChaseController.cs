@@ -7,9 +7,11 @@ public class ChaseController : MonoBehaviour
     public float targetOrthoSize = 13f;
     public float transitionSpeed = 2f;
     public float shakeIntensity = 1f;
-    public float shakeDuration = 5f; // Example duration
-    private bool isTransitioning = false;
+    public float shakeDuration = 5f;
+    public GameObject chaseTentaclePrefab; // Prefab for ChaseTentacle
+    public Transform spawnPoint; // Where the tentacle spawns
 
+    private bool isTransitioning = false;
     private float initialOrthoSize;
 
     private void Start()
@@ -29,6 +31,7 @@ public class ChaseController : MonoBehaviour
         {
             StartCameraTransition();
             CameraShake.Instance.ShakeCamera(shakeIntensity, shakeDuration);
+            SpawnChaseTentacle(other.transform); // Pass the player's transform
         }
     }
 
@@ -56,6 +59,29 @@ public class ChaseController : MonoBehaviour
         {
             virtualCamera.m_Lens.OrthographicSize = targetOrthoSize;
             isTransitioning = false;
+        }
+    }
+
+    private void SpawnChaseTentacle(Transform playerTransform)
+    {
+        if (chaseTentaclePrefab == null || spawnPoint == null)
+        {
+            Debug.LogError("ChaseTentaclePrefab or SpawnPoint is not assigned!");
+            return;
+        }
+
+        // Instantiate the tentacle
+        GameObject tentacle = Instantiate(chaseTentaclePrefab, spawnPoint.position, Quaternion.identity);
+
+        // Initialize the tentacle with the player's transform
+        ChaseTentacle tentacleScript = tentacle.GetComponent<ChaseTentacle>();
+        if (tentacleScript != null)
+        {
+            tentacleScript.Initialize(playerTransform);
+        }
+        else
+        {
+            Debug.LogError("The ChaseTentacle prefab does not have a ChaseTentacle script!");
         }
     }
 }
