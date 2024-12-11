@@ -6,9 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/JasmineChase.unity
-    guid: 28b90b8af1cd0e044b38b781f48b8fe5
-  - enabled: 1
     path: Assets/Scenes/Death.unity
     guid: 5f2d2ffb27c0d0842ade90e33f5caaa4
+  - enabled: 1
+    path: Assets/Scenes/Level_01.unity
+    guid: 372ee431574e600458f3cf870d6c75da
+  - enabled: 1
+    path: Assets/Scenes/End.unity
+    guid: 8794a3e408ca36d419969fc0a3db1149
   m_configObjects: {}
