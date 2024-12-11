@@ -273,6 +273,9 @@ MonoBehaviour:
   flashSpeed: 2
   introVoice: {fileID: 853955634043972929}
   sound3: {fileID: 6785934503939847432}
+  engineAudio: {fileID: 0}
+  healthAlarmAudio: {fileID: 0}
+  lowGasAlarmAudio: {fileID: 0}
 --- !u!50 &6325432765542286541
 Rigidbody2D:
   serializedVersion: 4
@@ -709,7 +712,7 @@ MonoBehaviour:
   - {x: -0.2579817, y: -6.082593, z: 0}
   m_ShapePathHash: -299913421
   m_Mesh: {fileID: 0}
-  m_InstanceId: 69756
+  m_InstanceId: 335412
   m_LocalBounds:
     m_Center: {x: 0.040575147, y: -0.89492416, z: 0}
     m_Extent: {x: 0.8476373, y: 5.187669, z: 0}
@@ -779,8 +782,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: -0.026150107, y: 0.012899995, z: 0}
-    m_Extent: {x: 2.68355, y: 1.0208, z: 0}
+    m_Center: {x: -0.031000018, y: 0.024699986, z: 0}
+    m_Extent: {x: 2.6838999, y: 1.0153, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0

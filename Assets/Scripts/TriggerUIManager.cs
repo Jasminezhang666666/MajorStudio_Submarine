@@ -37,8 +37,10 @@ public class TriggerUIManager : MonoBehaviour
         }
     }
 
-    private IEnumerator MoveUIOut()
+
+    public IEnumerator MoveUIOut()
     {
+        // The same code as before
         isMovingOut = true;
 
         while (uiLeft.anchoredPosition.x > -Screen.width || uiRight.anchoredPosition.x < Screen.width * 2)
@@ -58,7 +60,6 @@ public class TriggerUIManager : MonoBehaviour
 
         isMovingOut = false;
     }
-
     private IEnumerator MoveUIBack()
     {
         while ((uiLeft != null && Vector3.Distance(uiLeft.anchoredPosition, uiLeftStartPos) > 0.1f) ||
