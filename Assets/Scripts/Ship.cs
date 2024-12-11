@@ -119,13 +119,6 @@ private IEnumerator PlayIntroVoiceAndEnableMovement()
         currentGas -= gasDecreaseRate * Time.deltaTime;
         currentGas = Mathf.Clamp(currentGas, 0, gasMaximum);
 
-        // Check if gas is depleted
-        if (currentGas <= 0)
-        {
-            Debug.Log("Gas depleted! Player is dead.");
-            Die();
-        }
-
         // Update current speed
         currentSpeed = velocity.magnitude;
 
@@ -267,6 +260,52 @@ private IEnumerator PlayIntroVoiceAndEnableMovement()
             autoLight.enabled = true;
         }
     }
+    public void TakeDamage(float amount)
+    {
+        damageAmount -= amount;
+        damageAmount = Mathf.Clamp(damageAmount, 0f, float.MaxValue);  // Ensure health doesn't go below 0
+
+        if (damageAmount <= 0)
+        {
+            // Instead of directly calling Die(), we perform a check:
+            HandleZeroHealth();
+        }
+    }
+
+    private void HandleZeroHealth()
+    {
+        // Check if there are any active ChaseTentacle objects
+        ChaseTentacle[] tentacles = FindObjectsOfType<ChaseTentacle>();
+        if (tentacles != null && tentacles.Length > 0)
+        {
+            RespawnAtGasStation();
+        }
+        else
+        {
+            Die();
+        }
+    }
+
+    private void RespawnAtGasStation()
+    {
+        Debug.Log("Player Died but in Chase Scene. Respawning at last GasStation...");
+
+        transform.position = respawnPosition;
+
+        // Restore health???
+        damageAmount = 60f; 
+
+        currentGas = gasMaximum;
+        CanMove = true;
+
+        ShipUIManager.Instance.UpdateUI(damageAmount, currentGas, currentSpeed);
+
+        if (Submarineanimator != null)
+        {
+            Submarineanimator.SetBool("IsIdle", true);
+        }
+    }
+
     public void Die()
     {
         CanMove = false;
@@ -278,6 +317,7 @@ private IEnumerator PlayIntroVoiceAndEnableMovement()
 
         StartCoroutine(WaitForAnimationAndLoadScene());
     }
+
 
 
     private System.Collections.IEnumerator WaitForAnimationAndLoadScene()
@@ -293,16 +333,6 @@ private IEnumerator PlayIntroVoiceAndEnableMovement()
 
 
 
-    public void TakeDamage(float amount)
-    {
-        damageAmount -= amount;
-        damageAmount = Mathf.Clamp(damageAmount, 0f, float.MaxValue);  // Ensure health doesn't go below 0
-
-        if (damageAmount <= 0)
-        {
-            Die();
-        }
-    }
 
     public void RefuelGas()
     {
