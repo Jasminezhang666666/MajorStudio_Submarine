@@ -58,6 +58,13 @@ public class Ship : MonoBehaviour
     [SerializeField] private AudioSource healthAlarmAudio;  // Audio for Health Alarm
     [SerializeField] private AudioSource lowGasAlarmAudio;  // Audio for Low Gas Alarm
 
+    [Header("Others: UI")]
+    public TriggerUIManager uiManager;
+    private bool uiMovedOut = false;
+    public GameObject uiLeftObject;
+    public GameObject uiRightObject;
+    private bool uiHidden = false;
+
     private bool isHealthAlarmPlaying = false;
     private bool isLowGasAlarmPlaying = false;
 
@@ -116,23 +123,32 @@ private IEnumerator PlayIntroVoiceAndEnableMovement()
     {
         HandleMovement();
 
-        // Decrease gas over time
+        // Decrease gas over time and clamp
         currentGas -= gasDecreaseRate * Time.deltaTime;
         currentGas = Mathf.Clamp(currentGas, 0, gasMaximum);
 
         // Update current speed
         currentSpeed = velocity.magnitude;
 
-        // Update UI
+        // Update the UI directly
         ShipUIManager.Instance.UpdateUI(damageAmount, currentGas, currentSpeed);
 
-        // Handle lights based on damage
         HandleLights();
-
         HandleFlashingUI();
         HandleEngineAudio();
         HandleAlarms();
+
+        // If you added a condition to move the UI away when the ship starts moving:
+        if (!uiMovedOut && currentSpeed > 0f)
+        {
+            uiMovedOut = true;
+            if (uiManager != null)
+            {
+                StartCoroutine(uiManager.MoveUIOut());
+            }
+        }
     }
+
 
     private void PlayLowGasSound()
     {
@@ -276,6 +292,7 @@ private IEnumerator PlayIntroVoiceAndEnableMovement()
     private void HandleZeroHealth()
     {
         // Check if there are any active ChaseTentacle objects
+        /*
         ChaseTentacle[] tentacles = FindObjectsOfType<ChaseTentacle>();
         if (tentacles != null && tentacles.Length > 0)
         {
@@ -285,6 +302,8 @@ private IEnumerator PlayIntroVoiceAndEnableMovement()
         {
             Die();
         }
+        */
+        Die();
     }
 
     private void RespawnAtGasStation()

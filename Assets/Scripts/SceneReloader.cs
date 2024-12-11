@@ -13,6 +13,8 @@ public class RestartGame : MonoBehaviour
 
     void Restart()
     {
+        SaveManager.ClearData();
+
         SceneManager.LoadScene("Level_01");
     }
 }

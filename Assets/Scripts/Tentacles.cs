@@ -11,6 +11,10 @@ public class Tentacles : MonoBehaviour
     [Header("Audio Settings")]
     [SerializeField] private AudioSource attackSound; // Audio source for attack sound
 
+    [Header("UI Settings")]
+    [Tooltip("UI element that shows up during the tentacle attack.")]
+    public GameObject attackUI; // Assign this in the Inspector
+
     [Header("Space Bar Escape")]
     [SerializeField] private float PressTimeFrame = 5f;
     [SerializeField] private Vector2 requiredPressRange = new Vector2(7, 10); // Random range of required presses
@@ -45,6 +49,12 @@ public class Tentacles : MonoBehaviour
             attackStateObject.SetActive(true);
             normalStateObject.SetActive(false);
 
+            // Show the attack UI
+            if (attackUI != null)
+            {
+                attackUI.SetActive(true);
+            }
+
             // Play attack sound
             if (attackSound != null)
             {
@@ -74,6 +84,12 @@ public class Tentacles : MonoBehaviour
         {
             attackStateObject.SetActive(false);
             normalStateObject.SetActive(true);
+        }
+
+        // Hide the attack UI if it was enabled
+        if (attackUI != null)
+        {
+            attackUI.SetActive(false);
         }
 
         if (playerShip != null)
@@ -137,7 +153,7 @@ public class Tentacles : MonoBehaviour
             yield return null;
         }
 
-        // Restart mini-game if failed, and reduce health
+        // If player fails, reduce health again and restart mini-game
         Ship playerShipScript = playerShip.GetComponent<Ship>();
         if (playerShipScript != null)
         {
@@ -149,7 +165,10 @@ public class Tentacles : MonoBehaviour
 
     private void ExitAttackState()
     {
-        StopCoroutine(PressCoroutine);
+        if (PressCoroutine != null)
+        {
+            StopCoroutine(PressCoroutine);
+        }
 
         // Stop shaking when exiting the attack state
         if (shakeCoroutine != null)
