@@ -62,6 +62,7 @@ public class Ship : MonoBehaviour
     private bool isLowGasAlarmPlaying = false;
 
     private bool hasPlayedLowGasSound = false;
+    public bool HasReachedEnd { get; set; } = false;
 
     void Start()
 {
@@ -308,6 +309,13 @@ private IEnumerator PlayIntroVoiceAndEnableMovement()
 
     public void Die()
     {
+        // If we've reached the end, do not load the death scene
+        if (HasReachedEnd)
+        {
+            Debug.Log("Player tried to die after reaching the end. Ignoring death.");
+            return;
+        }
+
         CanMove = false;
 
         if (Submarineanimator != null)
