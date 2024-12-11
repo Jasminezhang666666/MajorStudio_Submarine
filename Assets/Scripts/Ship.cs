@@ -259,7 +259,7 @@ private IEnumerator PlayIntroVoiceAndEnableMovement()
             autoLight.enabled = true;
         }
     }
-    private void Die()
+    public void Die()
     {
         CanMove = false;
 
@@ -270,6 +270,7 @@ private IEnumerator PlayIntroVoiceAndEnableMovement()
 
         StartCoroutine(WaitForAnimationAndLoadScene());
     }
+
 
     private System.Collections.IEnumerator WaitForAnimationAndLoadScene()
     {
