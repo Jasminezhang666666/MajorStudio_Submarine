@@ -11,6 +11,10 @@ public class ChaseController : MonoBehaviour
     public GameObject chaseTentaclePrefab; // Prefab for ChaseTentacle
     public Transform spawnPoint; // Where the tentacle spawns
 
+    [Header("Audio Settings")]
+    public AudioSource chaseAudio; // AudioSource for chase music
+    public AudioSource bgmAudio;   // Independent AudioSource for BGM in the scene
+
     private bool isTransitioning = false;
     private float initialOrthoSize;
 
@@ -23,6 +27,16 @@ public class ChaseController : MonoBehaviour
         }
 
         initialOrthoSize = virtualCamera.m_Lens.OrthographicSize;
+
+        if (chaseAudio == null)
+        {
+            Debug.LogError("Chase audio is not assigned.");
+        }
+
+        if (bgmAudio == null)
+        {
+            Debug.LogError("BGM audio is not assigned.");
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -32,6 +46,7 @@ public class ChaseController : MonoBehaviour
             StartCameraTransition();
             CameraShake.Instance.ShakeCamera(shakeIntensity, shakeDuration);
             SpawnChaseTentacle(other.transform); // Pass the player's transform
+            HandleAudio(); // Handle audio changes
         }
     }
 
@@ -82,6 +97,21 @@ public class ChaseController : MonoBehaviour
         else
         {
             Debug.LogError("The ChaseTentacle prefab does not have a ChaseTentacle script!");
+        }
+    }
+
+    private void HandleAudio()
+    {
+        // Play chase audio
+        if (chaseAudio != null && !chaseAudio.isPlaying)
+        {
+            chaseAudio.Play();
+        }
+
+        // Deactivate BGM
+        if (bgmAudio != null && bgmAudio.isPlaying)
+        {
+            bgmAudio.Stop();
         }
     }
 }

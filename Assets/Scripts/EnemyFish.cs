@@ -17,7 +17,10 @@ public class EnemyFish : MonoBehaviour
     [SerializeField] private float wiggleCycleTime = 0.5f;
 
     [Header("Animation")]
-    [SerializeField] private Animator animator; // Animator component
+    [SerializeField] private Animator animator;
+
+    [Header("Audio Settings")]
+    [SerializeField] private AudioSource attackSound; // Audio source for attack sound
 
     private bool movingRight = true;
     private FishState currentState = FishState.Normal;
@@ -37,6 +40,11 @@ public class EnemyFish : MonoBehaviour
         if (animator == null)
         {
             animator = GetComponent<Animator>();
+        }
+
+        if (attackSound == null)
+        {
+            Debug.LogWarning("Attack sound is not assigned.");
         }
     }
 
@@ -62,14 +70,14 @@ public class EnemyFish : MonoBehaviour
         float moveDirection = movingRight ? 1 : -1;
         transform.Translate(Vector2.right * moveSpeed * moveDirection * Time.deltaTime);
 
-        animator.SetTrigger("Idle"); // Trigger Idle animation while moving horizontally
+        animator.SetTrigger("Idle");
     }
 
     private void AttackBehavior()
     {
         if (player != null)
         {
-            animator.SetTrigger("Attack"); // Trigger Attack animation
+            animator.SetTrigger("Attack");
 
             Vector3 directionToPlayer = (player.position - transform.position).normalized;
 
@@ -124,6 +132,16 @@ public class EnemyFish : MonoBehaviour
         if (currentState != FishState.Attack)
         {
             currentState = FishState.Attack;
+
+            // Play attack sound
+            if (attackSound != null)
+            {
+                attackSound.Play();
+            }
+            else
+            {
+                Debug.LogWarning("Attack sound not assigned.");
+            }
         }
 
         if (player != null)
@@ -139,8 +157,6 @@ public class EnemyFish : MonoBehaviour
     private void HitPlayer(Collider2D playerCollider)
     {
         if (isBackingUp || isWiggling) return;
-
-        print("HitPlayer");
 
         Ship playerShip = playerCollider.GetComponent<Ship>();
         if (playerShip != null)

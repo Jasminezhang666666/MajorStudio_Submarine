@@ -53,7 +53,13 @@ public class Ship : MonoBehaviour
 
     [Header("Audio Settings")]
     [SerializeField] private AudioSource introVoice; // AA
-    [SerializeField] private AudioSource sound3;     // Low gas warning: 3
+    [SerializeField] private AudioSource sound3;
+    [SerializeField] private AudioSource engineAudio;// Low gas warning: 3
+    [SerializeField] private AudioSource healthAlarmAudio;  // Audio for Health Alarm
+    [SerializeField] private AudioSource lowGasAlarmAudio;  // Audio for Low Gas Alarm
+
+    private bool isHealthAlarmPlaying = false;
+    private bool isLowGasAlarmPlaying = false;
 
     private bool hasPlayedLowGasSound = false;
 
@@ -130,6 +136,8 @@ private IEnumerator PlayIntroVoiceAndEnableMovement()
         HandleLights();
 
         HandleFlashingUI();
+        HandleEngineAudio();
+        HandleAlarms();
     }
 
     private void PlayLowGasSound()
@@ -326,7 +334,7 @@ private IEnumerator PlayIntroVoiceAndEnableMovement()
 
     private void HandleFlashingUI()
     {
-        // 确定警告信息
+        
         string warningMessage = "";
         if (damageAmount < 40f && currentGas < 40f)
         {
@@ -345,14 +353,14 @@ private IEnumerator PlayIntroVoiceAndEnableMovement()
             warningMessage = "LOW GAS ALERT";
         }
 
-        // 激活 UI
+        
         if (!string.IsNullOrEmpty(warningMessage))
         {
             if (warningText != null)
             {
                 warningText.text = warningMessage;
 
-                // 启动闪烁效果
+               
                 if (flashCoroutine == null)
                 {
                     flashCoroutine = StartCoroutine(FlashText(warningText));
@@ -370,12 +378,12 @@ private IEnumerator PlayIntroVoiceAndEnableMovement()
             {
                 warningText.text = "";
 
-                // 停止闪烁效果
+            
                 if (flashCoroutine != null)
                 {
                     StopCoroutine(flashCoroutine);
                     flashCoroutine = null;
-                    SetTextAlpha(warningText, 1f); // 恢复完全不透明
+                    SetTextAlpha(warningText, 1f); 
                 }
             }
 
@@ -386,7 +394,7 @@ private IEnumerator PlayIntroVoiceAndEnableMovement()
         }
     }
 
-    // 文本闪烁协程
+    
     private IEnumerator FlashText(TextMeshProUGUI text)
     {
         float alpha = 1f;
@@ -396,7 +404,7 @@ private IEnumerator PlayIntroVoiceAndEnableMovement()
         {
             if (fadingOut)
             {
-                alpha -= Time.deltaTime * flashSpeed; // 减少透明度
+                alpha -= Time.deltaTime * flashSpeed; 
                 if (alpha <= 0f)
                 {
                     alpha = 0f;
@@ -405,7 +413,7 @@ private IEnumerator PlayIntroVoiceAndEnableMovement()
             }
             else
             {
-                alpha += Time.deltaTime * flashSpeed; // 增加透明度
+                alpha += Time.deltaTime * flashSpeed; 
                 if (alpha >= 1f)
                 {
                     alpha = 1f;
@@ -418,12 +426,95 @@ private IEnumerator PlayIntroVoiceAndEnableMovement()
         }
     }
 
-    // 设置文本透明度
+   
     private void SetTextAlpha(TextMeshProUGUI text, float alpha)
     {
         Color color = text.color;
         color.a = alpha;
         text.color = color;
     }
+
+    private void HandleEngineAudio()
+    {
+        // Play engine audio when moving forward
+        if (currentSpeed > 0)
+        {
+            if (!engineAudio.isPlaying)
+            {
+                engineAudio.Play(); // Play audio only if not already playing
+            }
+        }
+        else
+        {
+            if (engineAudio.isPlaying && currentSpeed <= 0)
+            {
+                engineAudio.Stop(); // Stop audio when not moving
+            }
+        }
+    }
+    private void HandleAlarms()
+    {
+        if (damageAmount < 40f && currentGas < 40f)
+        {
+            // Both low: Prioritize health alarm
+            PlayHealthAlarm();
+            StopLowGasAlarm();
+        }
+        else if (damageAmount < 40f)
+        {
+            // Only health is low
+            PlayHealthAlarm();
+            StopLowGasAlarm();
+        }
+        else if (currentGas < 40f)
+        {
+            // Only gas is low
+            PlayLowGasAlarm();
+            StopHealthAlarm();
+        }
+        else
+        {
+            // Neither is low: Stop all alarms
+            StopHealthAlarm();
+            StopLowGasAlarm();
+        }
+    }
+
+    private void PlayHealthAlarm()
+    {
+        if (!isHealthAlarmPlaying && healthAlarmAudio != null)
+        {
+            healthAlarmAudio.Play();
+            isHealthAlarmPlaying = true;
+        }
+    }
+
+    private void StopHealthAlarm()
+    {
+        if (isHealthAlarmPlaying && healthAlarmAudio != null)
+        {
+            healthAlarmAudio.Stop();
+            isHealthAlarmPlaying = false;
+        }
+    }
+
+    private void PlayLowGasAlarm()
+    {
+        if (!isLowGasAlarmPlaying && lowGasAlarmAudio != null)
+        {
+            lowGasAlarmAudio.Play();
+            isLowGasAlarmPlaying = true;
+        }
+    }
+
+    private void StopLowGasAlarm()
+    {
+        if (isLowGasAlarmPlaying && lowGasAlarmAudio != null)
+        {
+            lowGasAlarmAudio.Stop();
+            isLowGasAlarmPlaying = false;
+        }
+    }
+
 
 }

@@ -4,16 +4,35 @@ public class StopChasing : MonoBehaviour
 {
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // 检测是否与玩家发生碰撞
         if (collision.CompareTag("Player"))
         {
-            // 找到场景中所有的触手对象
+            // Stop all tentacles
             ChaseTentacle[] tentacles = FindObjectsOfType<ChaseTentacle>();
             foreach (var tentacle in tentacles)
             {
-                // 将触手速度设置为0并删除
                 tentacle.StopAndDestroy();
             }
+
+            // Stop and disable all audio sources
+            StopAndDisableAllGameAudio();
         }
+    }
+
+    private void StopAndDisableAllGameAudio()
+    {
+        // Find all AudioSources in the scene
+        AudioSource[] allAudioSources = FindObjectsOfType<AudioSource>();
+        foreach (var audioSource in allAudioSources)
+        {
+            if (audioSource.isPlaying)
+            {
+                audioSource.Stop();
+            }
+
+            // Disable the AudioSource to prevent re-triggering
+            audioSource.enabled = false;
+        }
+
+        Debug.Log("All game sounds have been stopped and audio sources disabled.");
     }
 }

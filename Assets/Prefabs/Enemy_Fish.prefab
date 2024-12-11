@@ -107,6 +107,7 @@ MonoBehaviour:
   wiggleMoveDistance: 8
   wiggleCycleTime: 0.2
   animator: {fileID: 0}
+  attackSound: {fileID: 4863798262458477094, guid: 5608537281e184d40990e94c2a10fdca, type: 3}
 --- !u!61 &8568655570616450121
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -6,6 +6,7 @@ public class GasStation : MonoBehaviour
 {
     [SerializeField] private Color usedColor = Color.white; // Customizable color for the used state
     [SerializeField] private TextDisplay gasRefillText; // Reference to the specific TextDisplay component
+    [SerializeField] private AudioSource collectSound; // AudioSource for the collect sound
     private SpriteRenderer spriteRenderer;
     private bool isUsed = false;
     public Light2D gasLight;
@@ -37,6 +38,16 @@ public class GasStation : MonoBehaviour
                 if (gasRefillText != null)
                 {
                     gasRefillText.ShowMessage();
+                }
+
+                // Play collect sound
+                if (collectSound != null)
+                {
+                    collectSound.Play();
+                }
+                else
+                {
+                    Debug.LogWarning("Collect sound is not assigned.");
                 }
             }
         }

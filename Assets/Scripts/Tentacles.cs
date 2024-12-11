@@ -4,13 +4,14 @@ using UnityEngine;
 public class Tentacles : MonoBehaviour
 {
     [Header("General")]
-
     [SerializeField] private GameObject normalStateObject;
     [SerializeField] private GameObject attackStateObject;
     [SerializeField] private float damageAmount = 5f;
 
-    [Header("Space Bar Escape")]
+    [Header("Audio Settings")]
+    [SerializeField] private AudioSource attackSound; // Audio source for attack sound
 
+    [Header("Space Bar Escape")]
     [SerializeField] private float PressTimeFrame = 5f;
     [SerializeField] private Vector2 requiredPressRange = new Vector2(7, 10); // Random range of required presses
     [SerializeField] private float coolDownDuration = 7f; // Cooldown time after reverting to normal state
@@ -23,8 +24,6 @@ public class Tentacles : MonoBehaviour
     private Coroutine PressCoroutine;
     private Coroutine shakeCoroutine;
     private GameObject playerShip;
-
-
 
     private void Start()
     {
@@ -46,6 +45,16 @@ public class Tentacles : MonoBehaviour
             attackStateObject.SetActive(true);
             normalStateObject.SetActive(false);
 
+            // Play attack sound
+            if (attackSound != null)
+            {
+                attackSound.Play();
+            }
+            else
+            {
+                Debug.LogWarning("Attack sound is not assigned.");
+            }
+
             player.transform.position = attackStateObject.transform.position;
             Ship playerShipScript = player.GetComponent<Ship>();
             if (playerShipScript != null)
@@ -58,7 +67,6 @@ public class Tentacles : MonoBehaviour
             StartPressMiniGame();
         }
     }
-
 
     private void SetNormalState()
     {

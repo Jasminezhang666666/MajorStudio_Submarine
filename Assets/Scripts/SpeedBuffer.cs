@@ -6,6 +6,7 @@ public class SpeedBuffer : MonoBehaviour
     [SerializeField] private float speedBoost = 1f; // Speed boost amount
     [SerializeField] private float boostDuration = 8f; // Duration of the speed boost
     [SerializeField] private TextDisplay speedBoostText; // Reference to the TextDisplay component for the speed boost message
+    [SerializeField] private AudioSource collectSound; // AudioSource for the collect sound
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -16,6 +17,17 @@ public class SpeedBuffer : MonoBehaviour
             if (playerShip != null)
             {
                 StartCoroutine(ApplySpeedBoost(playerShip));
+
+                // Play collect sound
+                if (collectSound != null)
+                {
+                    collectSound.Play();
+                }
+                else
+                {
+                    Debug.LogWarning("Collect sound is not assigned.");
+                }
+
                 Destroy(gameObject); // Destroy the SpeedBuffer object after use
 
                 // Trigger the specific TextDisplay instance for the speed boost message

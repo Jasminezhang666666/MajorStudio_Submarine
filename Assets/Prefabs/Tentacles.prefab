@@ -308,6 +308,7 @@ MonoBehaviour:
   normalStateObject: {fileID: 3184157764865952249}
   attackStateObject: {fileID: 122226264281004415}
   damageAmount: 5
+  attackSound: {fileID: 4487002884190707736, guid: a4e36603c991cef4da1e654210ce2a79, type: 3}
   PressTimeFrame: 5
   requiredPressRange: {x: 9, y: 14}
   coolDownDuration: 7
